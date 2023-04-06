@@ -9,23 +9,23 @@ class SSButton extends Component {
         };
     }
 
-    componentDidMount(prevProps, prevState) {
-        // if (prevProps.toLightUp !== this.props.toLightUp) {
-        if (this.props.id === +this.props.toLightUp) {
-            this.computerClick();
-            console.log("Being called in children");
-        }
-        // }
-    }
-
-    // componentDidUpdate(prevProps, prevState) {
-    //     if (prevProps.toLightUp !== this.props.toLightUp) {
-    //         if (this.props.id === this.props.toLightUp) {
-    //             this.computerClick();
-    //             console.log("Being called in children");
-    //         }
+    // componentDidMount(prevProps, prevState) {
+    //     // if (prevProps.toLightUp !== this.props.toLightUp) {
+    //     if (this.props.id === +this.props.toLightUp) {
+    //         this.computerClick();
+    //         console.log("Being called in children");
     //     }
+    //     // }
     // }
+
+    componentDidUpdate(prevProps, prevState) {
+        if (prevProps.toLightUp !== this.props.toLightUp) {
+            if (this.props.id === this.props.toLightUp) {
+                this.computerClick();
+                console.log("Being called in children");
+            }
+        }
+    }
 
     computerClick = async () => {
         await this.lightUpFor(500);
@@ -40,6 +40,7 @@ class SSButton extends Component {
 
     userHandleClick = async () => {
         await this.lightUpFor(200);
+        await this.props.onCheckCorrectInput(this.props.id);
     };
 
     render() {
@@ -53,7 +54,7 @@ class SSButton extends Component {
                     borderRadius: "7px",
                 }}
                 onClick={this.userHandleClick}
-                disabled={this.props.isDisabled}
+                disabled={this.props.isDisabled ? true : false}
             ></button>
         );
     }

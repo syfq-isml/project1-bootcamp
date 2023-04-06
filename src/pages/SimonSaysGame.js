@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import SSButton from "../components/SimonSays/SSButton";
-import { getRandomIntInclusive } from "../utils";
+import { getRandomIntInclusive, timeout } from "../utils";
 
 let emptyArray = new Array(9).fill("");
 
@@ -14,11 +14,20 @@ class SimonSaysGame extends Component {
             highScore: 0,
             playerIsGuessing: false,
             steps: 0,
+            announcement: "",
+            showNextButton: true,
         };
     }
 
     generateSequence = () => {
         let randomNumber = getRandomIntInclusive(0, 8);
+        if (
+            randomNumber ===
+            this.state.currentSequence[this.state.currentSequence.length - 1]
+        ) {
+            this.generateSequence();
+            return;
+        }
         this.setState((prevState) => {
             return {
                 currentSequence: [...prevState.currentSequence, randomNumber],
@@ -34,23 +43,70 @@ class SimonSaysGame extends Component {
                         currentButtonToLightUp: prevState.currentSequence[i],
                     };
                 });
-                console.log("changing button in state");
-            }, i * 1200);
+                console.log(
+                    "Button to light up: " + this.state.currentButtonToLightUp
+                );
+            }, i * 1000);
         }
     };
 
     handleGameStart = async () => {
-        await this.setState({ currentButtonToLightUp: 11 });
+        await this.setState({
+            currentButtonToLightUp: 11,
+            announcement: "",
+            showNextButton: false,
+        });
         await this.generateSequence();
-        console.log("Sequece generated");
         await this.lightUpButtonsInSequence();
+        await timeout(1000 * this.state.currentSequence.length);
+        await this.setState({ playerIsGuessing: true });
+    };
+
+    checkCorrectInput = (id) => {
+        if (this.state.currentSequence[this.state.steps] !== id) {
+            this.setState({ announcement: "Wrong!" });
+            this.restartGame();
+            return;
+        }
+
+        this.setState(
+            (prevState) => {
+                return {
+                    steps: prevState.steps + 1,
+                };
+            },
+            () => {
+                if (this.state.steps === this.state.currentSequence.length) {
+                    this.setState({
+                        announcement: "Round won!",
+                        steps: 0,
+                        showNextButton: true,
+                        playerIsGuessing: false,
+                    });
+                }
+            }
+        );
+    };
+
+    restartGame = () => {
+        this.setState({
+            currentSequence: [],
+            currentButtonToLightUp: 11,
+            highScore: 0,
+            playerIsGuessing: false,
+            steps: 0,
+            showNextButton: true,
+        });
     };
 
     render() {
         return (
             <>
                 <h1>Level: {this.state.currentSequence.length}</h1>
-                <button onClick={this.handleGameStart}>Start Game</button>
+                {this.state.showNextButton && (
+                    <button onClick={this.handleGameStart}>Start Game</button>
+                )}
+                <h1>{this.state.announcement}</h1>
                 <div
                     style={{
                         display: "flex",
@@ -65,22 +121,14 @@ class SimonSaysGame extends Component {
                     {emptyArray.map((elem, index) => {
                         return (
                             <SSButton
-                                key={crypto.randomUUID()}
+                                key={index}
                                 id={index}
-                                isDisabled={this.state.playerIsGuessing}
+                                isDisabled={!this.state.playerIsGuessing}
                                 toLightUp={this.state.currentButtonToLightUp}
+                                onCheckCorrectInput={this.checkCorrectInput}
                             />
                         );
                     })}
-                    {/* <SSButton id="0" isDisabled={this.state.playerIsGuessing} triggerMe={}/>
-                    <SSButton id="1" isDisabled={this.state.playerIsGuessing} triggerMe={}/>
-                    <SSButton id="2" isDisabled={this.state.playerIsGuessing} triggerMe={}/>
-                    <SSButton id="3" isDisabled={this.state.playerIsGuessing} triggerMe={}/>
-                    <SSButton id="4" isDisabled={this.state.playerIsGuessing} triggerMe={}/>
-                    <SSButton id="5" isDisabled={this.state.playerIsGuessing} triggerMe={}/>
-                    <SSButton id="6" isDisabled={this.state.playerIsGuessing} triggerMe={}/>
-                    <SSButton id="7" isDisabled={this.state.playerIsGuessing} triggerMe={}/>
-                    <SSButton id="8" isDisabled={this.state.playerIsGuessing} triggerMe={}/> */}
                 </div>
             </>
         );
