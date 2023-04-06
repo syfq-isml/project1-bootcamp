@@ -57,6 +57,7 @@ class SimonSaysGame extends Component {
             showNextButton: false,
         });
         await this.generateSequence();
+        await timeout(1000);
         await this.lightUpButtonsInSequence();
         await timeout(1000 * this.state.currentSequence.length);
         await this.setState({ playerIsGuessing: true });
@@ -77,12 +78,15 @@ class SimonSaysGame extends Component {
             },
             () => {
                 if (this.state.steps === this.state.currentSequence.length) {
-                    this.setState({
-                        announcement: "Round won!",
-                        steps: 0,
-                        showNextButton: true,
-                        playerIsGuessing: false,
-                    });
+                    this.setState(
+                        {
+                            announcement: "Round won!",
+                            steps: 0,
+                            showNextButton: true,
+                            playerIsGuessing: false,
+                        },
+                        () => this.handleGameStart()
+                    );
                 }
             }
         );
