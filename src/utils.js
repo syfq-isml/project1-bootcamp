@@ -15,6 +15,21 @@ const getRandomWord = () => {
     return words[Math.floor(Math.random() * words.length)].toLowerCase();
 };
 
+const getArrayOfWords = (number) => {
+    let arr = [];
+    while (arr.length < number) {
+        let newWord = getRandomWord();
+        if (arr.includes(newWord)) {
+            console.log("Encountered duplicate, getting new word...");
+            continue;
+        }
+
+        arr.push(newWord);
+    }
+
+    return [...arr];
+};
+
 function shuffle(array) {
     for (let i = array.length - 1; i > 0; i--) {
         let j = Math.floor(Math.random() * (i + 1));
@@ -24,4 +39,10 @@ function shuffle(array) {
     return array;
 }
 
-export { getRandomIntInclusive, timeout, getRandomWord, shuffle };
+export {
+    getRandomIntInclusive,
+    timeout,
+    getRandomWord,
+    shuffle,
+    getArrayOfWords,
+};

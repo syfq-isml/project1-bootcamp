@@ -4,6 +4,7 @@ import "./App.css";
 import SimonSaysGame from "./pages/SimonSaysGame";
 import NumberGame from "./pages/NumberGame";
 import WordGame from "./pages/WordGame";
+import NoRepeatGame from "./pages/NoRepeatGame";
 
 class App extends React.Component {
     render() {
@@ -11,7 +12,8 @@ class App extends React.Component {
             <div className="App">
                 {/* <SimonSaysGame /> */}
                 {/* <NumberGame /> */}
-                <WordGame />
+                {/* <WordGame /> */}
+                <NoRepeatGame />
             </div>
         );
     }
