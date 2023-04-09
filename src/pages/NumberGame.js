@@ -6,6 +6,8 @@ import { Howl, Howler } from "howler";
 import fail808 from "../assets/sounds/fail808.wav";
 import succ808 from "../assets/sounds/succ808.wav";
 
+const LOCALSTORAGE_KEY_HISCORE = "hiScore_NG";
+
 class NumberGame extends Component {
     constructor(props) {
         super(props);
@@ -13,6 +15,7 @@ class NumberGame extends Component {
             userInput: "",
             currentSequence: [],
             level: 1,
+            hiScore: 0,
             display: "",
             userIsGuessing: false,
             showLossScreen: false,
@@ -32,6 +35,19 @@ class NumberGame extends Component {
     componentDidMount() {
         Howler.mute(false);
         Howler.volume(0.25);
+
+        const storedHiScore = JSON.parse(
+            localStorage.getItem(LOCALSTORAGE_KEY_HISCORE)
+        );
+        if (storedHiScore) this.setState({ hiScore: storedHiScore });
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        if (prevState.hiScore !== this.state.hiScore)
+            localStorage.setItem(
+                LOCALSTORAGE_KEY_HISCORE,
+                JSON.stringify(this.state.hiScore)
+            );
     }
 
     generateSequence = () => {
@@ -44,6 +60,10 @@ class NumberGame extends Component {
             return {
                 currentSequence: [...randomNumber],
                 level: prevState.level + 1,
+                hiScore: Math.max(
+                    this.state.currentSequence.length,
+                    prevState.hiScore
+                ),
             };
         });
     };
@@ -82,7 +102,12 @@ class NumberGame extends Component {
             this.startGame();
         } else {
             this.failSound.play();
-            this.setState({ userIsGuessing: false, showLossScreen: true });
+            this.setState((prevState) => {
+                return {
+                    userIsGuessing: false,
+                    showLossScreen: true,
+                };
+            });
         }
     };
 
@@ -111,6 +136,8 @@ class NumberGame extends Component {
                 {this.state.level === 1 && (
                     <button onClick={this.startGame}>Start Game</button>
                 )}
+                <h1>Level: {this.state.currentSequence.length || 1}</h1>
+                <h2>{this.state.hiScore}</h2>
                 <h1>{this.state.display}</h1>
                 {this.state.userIsGuessing && (
                     <>
@@ -130,6 +157,12 @@ class NumberGame extends Component {
                         <h1>{this.state.currentSequence}</h1>
                         <h1>You've entered</h1>
                         <h1>{this.state.userInput}</h1>
+                        <h1>
+                            You memorized a total of{" "}
+                            {this.state.currentSequence.length - 1} numbers this
+                            round.
+                        </h1>
+                        <h1>Your best was {this.state.hiScore} numbers!</h1>
                         <button onClick={this.restartGame}>Try again?</button>
                     </>
                 )}

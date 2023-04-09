@@ -7,6 +7,8 @@ import { Howl, Howler } from "howler";
 import fail808 from "../assets/sounds/fail808.wav";
 import succ808 from "../assets/sounds/succ808.wav";
 
+const LOCALSTORAGE_KEY_HISCORE = "hiScore_NR";
+
 class NoRepeatGame extends Component {
     constructor(props) {
         super(props);
@@ -33,6 +35,19 @@ class NoRepeatGame extends Component {
     componentDidMount() {
         Howler.mute(false);
         Howler.volume(0.25);
+
+        const storedHiScore = JSON.parse(
+            localStorage.getItem(LOCALSTORAGE_KEY_HISCORE)
+        );
+        if (storedHiScore) this.setState({ hiScore: storedHiScore });
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        if (prevState.hiScore !== this.state.hiScore)
+            localStorage.setItem(
+                LOCALSTORAGE_KEY_HISCORE,
+                JSON.stringify(this.state.hiScore)
+            );
     }
 
     handleClick = (word) => {
