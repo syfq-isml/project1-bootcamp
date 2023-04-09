@@ -1,6 +1,11 @@
 import React, { Component } from "react";
 import { getRandomIntInclusive, getRandomWord, shuffle } from "../utils";
 import { Link } from "react-router-dom";
+import { Howl, Howler } from "howler";
+
+import fail808 from "../assets/sounds/fail808.wav";
+import llbreak from "../assets/sounds/fail.wav";
+import succ808 from "../assets/sounds/succ808.wav";
 
 class WordGame extends Component {
     constructor(props) {
@@ -11,12 +16,32 @@ class WordGame extends Component {
             displayWord: "",
             score: 0,
             gameOver: false,
-            testArr: new Set([1, 2, 3, 4]),
+            atGameStart: true,
+
+            muted: false,
         };
+
+        this.successSound = new Howl({
+            src: [succ808],
+        });
+
+        this.lostLifeSound = new Howl({
+            src: [llbreak],
+        });
+
+        this.failSound = new Howl({
+            src: [fail808],
+        });
+    }
+
+    componentDidMount() {
+        Howler.mute(false);
+        Howler.volume(0.25);
     }
 
     selectWord = () => {
         // roll a dice
+        this.setState({ atGameStart: false });
         let outcome = getRandomIntInclusive(1, 3);
 
         // 2/3 chance to get a new word
@@ -45,6 +70,7 @@ class WordGame extends Component {
             (e.target.name === "seen" && result) ||
             (e.target.name === "not-seen" && !result)
         ) {
+            this.successSound.play();
             await this.setState((prevState) => {
                 return {
                     score: prevState.score + 1,
@@ -55,16 +81,40 @@ class WordGame extends Component {
         } else {
             this.setState((prevState) => {
                 if (prevState.livesLeft - 1 === 0) {
+                    this.failSound.play();
                     return {
                         livesLeft: 0,
                         gameOver: true,
                     };
                 }
+                this.lostLifeSound.play();
                 return {
                     livesLeft: prevState.livesLeft - 1,
                 };
             });
         }
+    };
+
+    muteSound = () => {
+        this.setState({ muted: !this.state.muted }, () => {
+            if (this.state.muted) {
+                Howler.mute(true);
+                return;
+            }
+
+            Howler.mute(false);
+        });
+    };
+
+    restartGame = () => {
+        this.setState({
+            livesLeft: 3,
+            words: new Set(),
+            displayWord: "",
+            score: 0,
+            gameOver: false,
+            atGameStart: true,
+        });
     };
 
     render() {
@@ -73,20 +123,45 @@ class WordGame extends Component {
                 <Link to={"/"}>
                     <button>Back to main</button>
                 </Link>
-                <button onClick={this.selectWord}>Start Game</button>
-                <h2>Lives left: {this.state.livesLeft}</h2>
+                <button onClick={this.muteSound}>Mute sound</button>
+                {this.state.atGameStart && (
+                    <button onClick={this.selectWord}>Start Game</button>
+                )}
+
+                <h2>
+                    Lives left:{" "}
+                    {this.state.gameOver
+                        ? "💀"
+                        : Array(this.state.livesLeft).fill("❤")}
+                </h2>
                 <h2>Score: {this.state.score}</h2>
                 <h1>Have you seen this word?</h1>
                 <br />
-                <h1>{this.state.displayWord}</h1>
-                <h1>{this.state.words}</h1>
-                <br />
-                <button name="seen" onClick={this.checkUserInput}>
-                    SEEN
-                </button>
-                <button name="not-seen" onClick={this.checkUserInput}>
-                    NOT YET SEEN
-                </button>
+                {this.state.gameOver ? (
+                    <button onClick={this.restartGame}>Play Again?</button>
+                ) : (
+                    <>
+                        {!this.state.atGameStart && (
+                            <>
+                                <h1>{this.state.displayWord}</h1>
+                                <h1>{this.state.words}</h1>
+                                <br />
+                                <button
+                                    name="seen"
+                                    onClick={this.checkUserInput}
+                                >
+                                    SEEN
+                                </button>
+                                <button
+                                    name="not-seen"
+                                    onClick={this.checkUserInput}
+                                >
+                                    NOT YET SEEN
+                                </button>
+                            </>
+                        )}
+                    </>
+                )}
             </>
         );
     }

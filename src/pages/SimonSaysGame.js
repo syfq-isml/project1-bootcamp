@@ -2,6 +2,10 @@ import React, { Component } from "react";
 import SSButton from "../components/SimonSays/SSButton";
 import { getRandomIntInclusive, timeout } from "../utils";
 import { Link } from "react-router-dom";
+import { Howl, Howler } from "howler";
+
+import fail808 from "../assets/sounds/fail808.wav";
+import succ808 from "../assets/sounds/succ808.wav";
 
 let emptyArray = new Array(9).fill("");
 
@@ -17,7 +21,22 @@ class SimonSaysGame extends Component {
             steps: 0,
             announcement: "",
             showNextButton: true,
+
+            muted: false,
         };
+
+        this.successSound = new Howl({
+            src: [succ808],
+        });
+
+        this.failSound = new Howl({
+            src: [fail808],
+        });
+    }
+
+    componentDidMount() {
+        Howler.mute(false);
+        Howler.volume(0.25);
     }
 
     generateSequence = () => {
@@ -66,6 +85,7 @@ class SimonSaysGame extends Component {
 
     checkCorrectInput = (id) => {
         if (this.state.currentSequence[this.state.steps] !== id) {
+            this.failSound.play();
             this.setState({ announcement: "Wrong!" });
             this.restartGame();
             return;
@@ -79,6 +99,7 @@ class SimonSaysGame extends Component {
             },
             () => {
                 if (this.state.steps === this.state.currentSequence.length) {
+                    this.successSound.play();
                     this.setState(
                         {
                             announcement: "Round won!",
@@ -104,12 +125,24 @@ class SimonSaysGame extends Component {
         });
     };
 
+    muteSound = () => {
+        this.setState({ muted: !this.state.muted }, () => {
+            if (this.state.muted) {
+                Howler.mute(true);
+                return;
+            }
+
+            Howler.mute(false);
+        });
+    };
+
     render() {
         return (
             <>
                 <Link to={"/"}>
                     <button>Back to main</button>
                 </Link>
+                <button onClick={this.muteSound}>Mute sound</button>
                 <h1>Level: {this.state.currentSequence.length}</h1>
                 {this.state.showNextButton && (
                     <button onClick={this.handleGameStart}>Start Game</button>

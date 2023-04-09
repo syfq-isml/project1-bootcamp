@@ -2,6 +2,10 @@ import React, { Component } from "react";
 import { getArrayOfWords, shuffle } from "../utils";
 import NRCards from "../components/NoRepeatGame/NRCards";
 import { Link } from "react-router-dom";
+import { Howl, Howler } from "howler";
+
+import fail808 from "../assets/sounds/fail808.wav";
+import succ808 from "../assets/sounds/succ808.wav";
 
 class NoRepeatGame extends Component {
     constructor(props) {
@@ -13,14 +17,31 @@ class NoRepeatGame extends Component {
             alreadyClicked: [],
             isGameOver: false,
             lastClickedWord: "",
+
+            muted: false,
         };
+
+        this.successSound = new Howl({
+            src: [succ808],
+        });
+
+        this.failSound = new Howl({
+            src: [fail808],
+        });
+    }
+
+    componentDidMount() {
+        Howler.mute(false);
+        Howler.volume(0.25);
     }
 
     handleClick = (word) => {
         if (this.state.alreadyClicked.includes(word)) {
             console.log("Lose and restart");
+            this.failSound.play();
             this.setState({ isGameOver: true, lastClickedWord: word });
         } else {
+            this.successSound.play();
             this.setState((prevState) => {
                 return {
                     score: prevState.score + 1,
@@ -44,12 +65,24 @@ class NoRepeatGame extends Component {
         });
     };
 
+    muteSound = () => {
+        this.setState({ muted: !this.state.muted }, () => {
+            if (this.state.muted) {
+                Howler.mute(true);
+                return;
+            }
+
+            Howler.mute(false);
+        });
+    };
+
     render() {
         return (
             <>
                 <Link to={"/"}>
                     <button>Back to main</button>
                 </Link>
+                <button onClick={this.muteSound}>Mute sound</button>
                 <h1>Click on each card exactly once!</h1>
                 <h2>Score: {this.state.score}</h2>
                 <h2>HiScore: {this.state.hiScore}</h2>

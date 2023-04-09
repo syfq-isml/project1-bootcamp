@@ -1,6 +1,10 @@
 import React, { Component } from "react";
 import { getRandomIntInclusive, timeout } from "../utils";
 import { Link } from "react-router-dom";
+import { Howl, Howler } from "howler";
+
+import fail808 from "../assets/sounds/fail808.wav";
+import succ808 from "../assets/sounds/succ808.wav";
 
 class NumberGame extends Component {
     constructor(props) {
@@ -12,7 +16,22 @@ class NumberGame extends Component {
             display: "",
             userIsGuessing: false,
             showLossScreen: false,
+
+            muted: false,
         };
+
+        this.successSound = new Howl({
+            src: [succ808],
+        });
+
+        this.failSound = new Howl({
+            src: [fail808],
+        });
+    }
+
+    componentDidMount() {
+        Howler.mute(false);
+        Howler.volume(0.25);
     }
 
     generateSequence = () => {
@@ -48,6 +67,8 @@ class NumberGame extends Component {
             display: "",
             userIsGuessing: false,
             showLossScreen: false,
+
+            muted: false,
         });
     };
 
@@ -57,8 +78,10 @@ class NumberGame extends Component {
         if (input === "") return;
 
         if (input === this.state.currentSequence.join("")) {
+            this.successSound.play();
             this.startGame();
         } else {
+            this.failSound.play();
             this.setState({ userIsGuessing: false, showLossScreen: true });
         }
     };
@@ -67,12 +90,24 @@ class NumberGame extends Component {
         this.setState({ userInput: e.target.value });
     };
 
+    muteSound = () => {
+        this.setState({ muted: !this.state.muted }, () => {
+            if (this.state.muted) {
+                Howler.mute(true);
+                return;
+            }
+
+            Howler.mute(false);
+        });
+    };
+
     render() {
         return (
             <>
                 <Link to={"/"}>
                     <button>Back to main</button>
                 </Link>
+                <button onClick={this.muteSound}>Mute sound</button>
                 {this.state.level === 1 && (
                     <button onClick={this.startGame}>Start Game</button>
                 )}
