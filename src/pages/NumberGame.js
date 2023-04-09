@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { getRandomIntInclusive, timeout } from "../utils";
+import { Link } from "react-router-dom";
 
 class NumberGame extends Component {
     constructor(props) {
@@ -69,6 +70,9 @@ class NumberGame extends Component {
     render() {
         return (
             <>
+                <Link to={"/"}>
+                    <button>Back to main</button>
+                </Link>
                 {this.state.level === 1 && (
                     <button onClick={this.startGame}>Start Game</button>
                 )}

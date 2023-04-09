@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { getArrayOfWords, shuffle } from "../utils";
 import NRCards from "../components/NoRepeatGame/NRCards";
+import { Link } from "react-router-dom";
 
 class NoRepeatGame extends Component {
     constructor(props) {
@@ -46,6 +47,9 @@ class NoRepeatGame extends Component {
     render() {
         return (
             <>
+                <Link to={"/"}>
+                    <button>Back to main</button>
+                </Link>
                 <h1>Click on each card exactly once!</h1>
                 <h2>Score: {this.state.score}</h2>
                 <h2>HiScore: {this.state.hiScore}</h2>

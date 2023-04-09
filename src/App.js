@@ -5,15 +5,30 @@ import SimonSaysGame from "./pages/SimonSaysGame";
 import NumberGame from "./pages/NumberGame";
 import WordGame from "./pages/WordGame";
 import NoRepeatGame from "./pages/NoRepeatGame";
+import Home from "./pages/Home";
+
+import { HashRouter, Route, Routes } from "react-router-dom";
 
 class App extends React.Component {
+    sayHello = () => {
+        console.log("say hello");
+    };
+
     render() {
         return (
             <div className="App">
-                {/* <SimonSaysGame /> */}
-                {/* <NumberGame /> */}
-                {/* <WordGame /> */}
-                <NoRepeatGame />
+                <HashRouter>
+                    <Routes>
+                        <Route path="/" element={<Home />} />
+                        <Route path="simon-says" element={<SimonSaysGame />} />
+                        <Route path="word-game" element={<WordGame />} />
+                        <Route path="number-game" element={<NumberGame />} />
+                        <Route
+                            path="no-repeat-game"
+                            element={<NoRepeatGame />}
+                        />
+                    </Routes>
+                </HashRouter>
             </div>
         );
     }

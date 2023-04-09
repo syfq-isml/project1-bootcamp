@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { getRandomIntInclusive, getRandomWord, shuffle } from "../utils";
+import { Link } from "react-router-dom";
 
 class WordGame extends Component {
     constructor(props) {
@@ -69,6 +70,9 @@ class WordGame extends Component {
     render() {
         return (
             <>
+                <Link to={"/"}>
+                    <button>Back to main</button>
+                </Link>
                 <button onClick={this.selectWord}>Start Game</button>
                 <h2>Lives left: {this.state.livesLeft}</h2>
                 <h2>Score: {this.state.score}</h2>

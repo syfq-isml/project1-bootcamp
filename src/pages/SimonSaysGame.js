@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import SSButton from "../components/SimonSays/SSButton";
 import { getRandomIntInclusive, timeout } from "../utils";
+import { Link } from "react-router-dom";
 
 let emptyArray = new Array(9).fill("");
 
@@ -106,6 +107,9 @@ class SimonSaysGame extends Component {
     render() {
         return (
             <>
+                <Link to={"/"}>
+                    <button>Back to main</button>
+                </Link>
                 <h1>Level: {this.state.currentSequence.length}</h1>
                 {this.state.showNextButton && (
                     <button onClick={this.handleGameStart}>Start Game</button>
