@@ -7,6 +7,8 @@ import fail808 from "../assets/sounds/fail808.wav";
 import llbreak from "../assets/sounds/fail.wav";
 import succ808 from "../assets/sounds/succ808.wav";
 
+const LOCALSTORAGE_KEY_HISCORE = "hiScores";
+
 class WordGame extends Component {
     constructor(props) {
         super(props);
@@ -15,6 +17,7 @@ class WordGame extends Component {
             words: new Set(),
             displayWord: "",
             score: 0,
+            hiScore: 0,
             gameOver: false,
             atGameStart: true,
 
@@ -37,6 +40,38 @@ class WordGame extends Component {
     componentDidMount() {
         Howler.mute(false);
         Howler.volume(0.25);
+
+        const storedHiScores = JSON.parse(
+            localStorage.getItem(LOCALSTORAGE_KEY_HISCORE)
+        );
+        if (storedHiScores && storedHiScores.WG)
+            this.setState({ hiScore: storedHiScores.WG });
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        if (prevState.hiScore !== this.state.hiScore) {
+            const storedHiScores = JSON.parse(
+                localStorage.getItem(LOCALSTORAGE_KEY_HISCORE)
+            );
+
+            if (storedHiScores) {
+                localStorage.setItem(
+                    LOCALSTORAGE_KEY_HISCORE,
+                    JSON.stringify({
+                        ...storedHiScores,
+                        WG: this.state.hiScore,
+                    })
+                );
+                return;
+            }
+
+            localStorage.setItem(
+                LOCALSTORAGE_KEY_HISCORE,
+                JSON.stringify({
+                    WG: this.state.hiScore,
+                })
+            );
+        }
     }
 
     selectWord = () => {
@@ -75,6 +110,7 @@ class WordGame extends Component {
                 return {
                     score: prevState.score + 1,
                     words: new Set([...prevState.words, prevState.displayWord]),
+                    hiScore: Math.max(prevState.score + 1, prevState.hiScore),
                 };
             });
             await this.selectWord();
@@ -135,6 +171,7 @@ class WordGame extends Component {
                         : Array(this.state.livesLeft).fill("❤")}
                 </h2>
                 <h2>Score: {this.state.score}</h2>
+                <h2>HiScore: {this.state.hiScore}</h2>
                 <h1>Have you seen this word?</h1>
                 <br />
                 {this.state.gameOver ? (

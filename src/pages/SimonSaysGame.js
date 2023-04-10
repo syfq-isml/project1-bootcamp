@@ -9,6 +9,8 @@ import succ808 from "../assets/sounds/succ808.wav";
 
 let emptyArray = new Array(9).fill("");
 
+const LOCALSTORAGE_KEY_HISCORE = "hiScores";
+
 class SimonSaysGame extends Component {
     constructor(props) {
         super(props);
@@ -16,7 +18,7 @@ class SimonSaysGame extends Component {
         this.state = {
             currentSequence: [],
             currentButtonToLightUp: 11,
-            highScore: 0,
+            hiScore: 0,
             playerIsGuessing: false,
             steps: 0,
             announcement: "",
@@ -37,6 +39,38 @@ class SimonSaysGame extends Component {
     componentDidMount() {
         Howler.mute(false);
         Howler.volume(0.25);
+
+        const storedHiScores = JSON.parse(
+            localStorage.getItem(LOCALSTORAGE_KEY_HISCORE)
+        );
+        if (storedHiScores && storedHiScores.SS)
+            this.setState({ hiScore: storedHiScores.SS });
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        if (prevState.hiScore !== this.state.hiScore) {
+            const storedHiScores = JSON.parse(
+                localStorage.getItem(LOCALSTORAGE_KEY_HISCORE)
+            );
+
+            if (storedHiScores) {
+                localStorage.setItem(
+                    LOCALSTORAGE_KEY_HISCORE,
+                    JSON.stringify({
+                        ...storedHiScores,
+                        SS: this.state.hiScore,
+                    })
+                );
+                return;
+            }
+
+            localStorage.setItem(
+                LOCALSTORAGE_KEY_HISCORE,
+                JSON.stringify({
+                    SS: this.state.hiScore,
+                })
+            );
+        }
     }
 
     generateSequence = () => {
@@ -101,11 +135,17 @@ class SimonSaysGame extends Component {
                 if (this.state.steps === this.state.currentSequence.length) {
                     this.successSound.play();
                     this.setState(
-                        {
-                            announcement: "Round won!",
-                            steps: 0,
-                            showNextButton: true,
-                            playerIsGuessing: false,
+                        (prevState) => {
+                            return {
+                                announcement: "Round won!",
+                                steps: 0,
+                                showNextButton: true,
+                                playerIsGuessing: false,
+                                hiScore: Math.max(
+                                    prevState.hiScore,
+                                    prevState.currentSequence.length
+                                ),
+                            };
                         },
                         () => this.handleGameStart()
                     );
@@ -144,6 +184,7 @@ class SimonSaysGame extends Component {
                 </Link>
                 <button onClick={this.muteSound}>Mute sound</button>
                 <h1>Level: {this.state.currentSequence.length}</h1>
+                <h2>HiScore: {this.state.hiScore}</h2>
                 {this.state.showNextButton && (
                     <button onClick={this.handleGameStart}>Start Game</button>
                 )}

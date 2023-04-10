@@ -6,7 +6,7 @@ import { Howl, Howler } from "howler";
 import fail808 from "../assets/sounds/fail808.wav";
 import succ808 from "../assets/sounds/succ808.wav";
 
-const LOCALSTORAGE_KEY_HISCORE = "hiScore_NG";
+const LOCALSTORAGE_KEY_HISCORE = "hiScores";
 
 class NumberGame extends Component {
     constructor(props) {
@@ -36,18 +36,37 @@ class NumberGame extends Component {
         Howler.mute(false);
         Howler.volume(0.25);
 
-        const storedHiScore = JSON.parse(
+        const storedHiScores = JSON.parse(
             localStorage.getItem(LOCALSTORAGE_KEY_HISCORE)
         );
-        if (storedHiScore) this.setState({ hiScore: storedHiScore });
+        if (storedHiScores && storedHiScores.NG)
+            this.setState({ hiScore: storedHiScores.NG });
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if (prevState.hiScore !== this.state.hiScore)
+        if (prevState.hiScore !== this.state.hiScore) {
+            const storedHiScores = JSON.parse(
+                localStorage.getItem(LOCALSTORAGE_KEY_HISCORE)
+            );
+
+            if (storedHiScores) {
+                localStorage.setItem(
+                    LOCALSTORAGE_KEY_HISCORE,
+                    JSON.stringify({
+                        ...storedHiScores,
+                        NG: this.state.hiScore,
+                    })
+                );
+                return;
+            }
+
             localStorage.setItem(
                 LOCALSTORAGE_KEY_HISCORE,
-                JSON.stringify(this.state.hiScore)
+                JSON.stringify({
+                    NG: this.state.hiScore,
+                })
             );
+        }
     }
 
     generateSequence = () => {
