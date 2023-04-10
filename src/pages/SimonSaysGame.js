@@ -7,6 +7,8 @@ import { Howl, Howler } from "howler";
 import fail808 from "../assets/sounds/fail808.wav";
 import succ808 from "../assets/sounds/succ808.wav";
 
+import xyloSounds from "../assets/sounds/xylo/xyloSounds.mp3";
+
 let emptyArray = new Array(9).fill("");
 
 const LOCALSTORAGE_KEY_HISCORE = "hiScores";
@@ -33,6 +35,21 @@ class SimonSaysGame extends Component {
 
         this.failSound = new Howl({
             src: [fail808],
+        });
+
+        this.xyloSound = new Howl({
+            src: [xyloSounds],
+            sprite: {
+                xylo1: [0, 755.9863945578231],
+                xylo2: [2000, 961.609977324263],
+                xylo3: [4000, 491.38321995464815],
+                xylo4: [6000, 530.4535147392287],
+                xylo5: [8000, 547.913832199546],
+                xylo6: [10000, 564.1269841269842],
+                xylo7: [12000, 355.9637188208615],
+                xylo8: [14000, 484.6712018140593],
+                xylo9: [16000, 427.46031746031576],
+            },
         });
     }
 
@@ -92,11 +109,18 @@ class SimonSaysGame extends Component {
     lightUpButtonsInSequence = () => {
         for (let i = 0; i < this.state.currentSequence.length; i++) {
             setTimeout(() => {
-                this.setState((prevState) => {
-                    return {
-                        currentButtonToLightUp: prevState.currentSequence[i],
-                    };
-                });
+                this.setState(
+                    (prevState) => {
+                        return {
+                            currentButtonToLightUp:
+                                prevState.currentSequence[i],
+                        };
+                    },
+                    () =>
+                        this.xyloSound.play(
+                            `xylo${this.state.currentButtonToLightUp + 1}`
+                        )
+                );
                 console.log(
                     "Button to light up: " + this.state.currentButtonToLightUp
                 );
@@ -133,7 +157,7 @@ class SimonSaysGame extends Component {
             },
             () => {
                 if (this.state.steps === this.state.currentSequence.length) {
-                    this.successSound.play();
+                    // setTimeout(() => this.successSound.play(), 150);
                     this.setState(
                         (prevState) => {
                             return {
@@ -176,9 +200,14 @@ class SimonSaysGame extends Component {
         });
     };
 
+    handleTest = () => {
+        this.xyloSound.play("xylo1");
+    };
+
     render() {
         return (
             <>
+                <button onClick={this.handleTest}>Test</button>
                 <Link to={"/"}>
                     <button>Back to main</button>
                 </Link>
