@@ -1,19 +1,36 @@
 .App {
-  text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.fl-col {
+    display: flex;
+    flex-direction: column;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.fl-row {
+    display: flex;
+    flex-direction: row;
+}
+
+.fl-centered {
+    justify-content: center;
+    align-items: center;
+}
+
+.NO-REPEAT {
+    /* display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; */
+    min-height: 100vh;
+    background: #f2994a; /* fallback for old browsers */
+    background: -webkit-linear-gradient(
+        to bottom,
+        #f2c94c,
+        #f2994a
+    ); /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(
+        to bottom,
+        #f2c94c,
+        #f2994a
+    ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 }

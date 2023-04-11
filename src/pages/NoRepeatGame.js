@@ -6,8 +6,43 @@ import { Howl, Howler } from "howler";
 
 import fail808 from "../assets/sounds/fail808.wav";
 import succ808 from "../assets/sounds/succ808.wav";
+import BackButton from "../components/Shared/BackButton";
+import InfoButton from "../components/Shared/InfoButton";
+import MuteButton from "../components/Shared/MuteButton";
+import {
+    Box,
+    Button,
+    Container,
+    Grid,
+    Stack,
+    ThemeProvider,
+    Typography,
+    createTheme,
+    styled,
+} from "@mui/material";
 
 const LOCALSTORAGE_KEY_HISCORE = "hiScores";
+
+const theme = createTheme({
+    typography: {
+        fontFamily: ["Inter", "sans-serif"].join(","),
+        allVariants: {
+            color: "white",
+        },
+    },
+});
+
+const StyledButton = styled(Button)({
+    fontWeight: "700",
+    fontSize: "1.5rem",
+    padding: "1rem 2rem",
+    backgroundColor: "white",
+    color: "#F07C31",
+    width: "fit-content",
+    "&:hover": {
+        backgroundColor: "#F3F2F2",
+    },
+});
 
 class NoRepeatGame extends Component {
     constructor(props) {
@@ -112,47 +147,137 @@ class NoRepeatGame extends Component {
 
     render() {
         return (
-            <>
-                <Link to={"/"}>
-                    <button>Back to main</button>
-                </Link>
-                <button onClick={this.muteSound}>Mute sound</button>
-                <h1>Click on each card exactly once!</h1>
-                <h2>Score: {this.state.score}</h2>
-                <h2>HiScore: {this.state.hiScore}</h2>
+            <ThemeProvider theme={theme}>
+                <Box className="NO-REPEAT">
+                    <Container>
+                        <Box alignItems={"center"} justifyContent={"center"}>
+                            <Stack
+                                justifyContent={"center"}
+                                alignItems={"center"}
+                            >
+                                <Stack
+                                    direction={"row"}
+                                    justifyContent={"space-between"}
+                                    width={"100%"}
+                                >
+                                    <Link to={"/"}>
+                                        <BackButton />
+                                    </Link>
+                                    <Stack direction={"row"} spacing={2}>
+                                        <InfoButton />
+                                        <MuteButton
+                                            onClick={this.muteSound}
+                                            muted={this.state.muted}
+                                        />
+                                    </Stack>
+                                </Stack>
 
-                <div
-                    style={{
-                        display: "flex",
-                        gap: "1rem",
-                        width: "450px",
-                        flexWrap: "wrap",
-                    }}
-                >
-                    {this.state.wordsArray.map((word) => {
-                        let bool = this.state.alreadyClicked.includes(word);
+                                <Typography variant="h3" fontWeight={"700"}>
+                                    Click on each card exactly once!
+                                </Typography>
+                                <Stack
+                                    direction={"row"}
+                                    justifyContent={"space-evenly"}
+                                    width={"100%"}
+                                    padding={2}
+                                >
+                                    <Typography variant="h5">
+                                        Score:{" "}
+                                        <Typography
+                                            variant="h5"
+                                            sx={{
+                                                display: "inline-flex",
+                                                fontWeight: "700",
+                                                color: "#F56100",
+                                            }}
+                                        >
+                                            {this.state.score}
+                                        </Typography>
+                                    </Typography>
+                                    <Typography variant="h5">
+                                        HiScore:{" "}
+                                        <Typography
+                                            variant="h5"
+                                            sx={{
+                                                display: "inline-flex",
+                                                fontWeight: "700",
+                                                color: "#F56100",
+                                            }}
+                                        >
+                                            {this.state.hiScore}
+                                        </Typography>
+                                    </Typography>
+                                </Stack>
 
-                        return (
-                            <NRCards
-                                key={`00x${word}`}
-                                word={word}
-                                onClick={this.handleClick}
-                                isGameOver={this.state.isGameOver}
-                                isAlreadyClicked={bool}
-                            />
-                        );
-                    })}
-                </div>
-                {this.state.isGameOver && (
-                    <>
-                        <h2>
-                            Oops, you've clicked '{this.state.lastClickedWord}'{" "}
-                            twice.
-                        </h2>
-                        <button onClick={this.restartGame}>Play again</button>
-                    </>
-                )}
-            </>
+                                <Box
+                                    justifyContent={"center"}
+                                    alignItems={"center"}
+                                    sx={{
+                                        display: "flex",
+                                        gap: "1rem",
+                                        width: "800px",
+                                        flexWrap: "wrap",
+                                    }}
+                                >
+                                    {this.state.wordsArray.map((word) => {
+                                        let bool =
+                                            this.state.alreadyClicked.includes(
+                                                word
+                                            );
+
+                                        return (
+                                            <NRCards
+                                                key={`00x${word}`}
+                                                word={word}
+                                                onClick={this.handleClick}
+                                                isGameOver={
+                                                    this.state.isGameOver
+                                                }
+                                                isAlreadyClicked={bool}
+                                            />
+                                        );
+                                    })}
+                                </Box>
+                                {this.state.isGameOver && (
+                                    <Stack
+                                        spacing={2}
+                                        alignItems={"center"}
+                                        mt={2}
+                                    >
+                                        <Typography
+                                            variant="h4"
+                                            fontWeight={700}
+                                            mt={2}
+                                            mb={2}
+                                        >
+                                            ❌ Oops, you've clicked on{" "}
+                                            <span
+                                                style={{
+                                                    color: "white",
+                                                    backgroundColor: "#F56100",
+                                                    fontWeight: "700",
+                                                    fontSize: "1.5rem",
+                                                    padding: "1rem",
+                                                    borderRadius: "4px",
+                                                    textTransform: "uppercase",
+                                                }}
+                                            >
+                                                {this.state.lastClickedWord}
+                                            </span>{" "}
+                                            twice. ❌
+                                        </Typography>
+                                        <StyledButton
+                                            onClick={this.restartGame}
+                                        >
+                                            Play again
+                                        </StyledButton>
+                                    </Stack>
+                                )}
+                            </Stack>
+                        </Box>
+                    </Container>
+                </Box>
+            </ThemeProvider>
         );
     }
 }
