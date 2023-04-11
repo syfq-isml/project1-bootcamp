@@ -34,3 +34,34 @@
         #f2994a
     ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 }
+
+.NUMBER-GAME {
+    min-height: 100vh;
+    background: #56ab2f; /* fallback for old browsers */
+    background: -webkit-linear-gradient(
+        to bottom,
+        #a8e063,
+        #56ab2f
+    ); /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(
+        to bottom,
+        #a8e063,
+        #56ab2f
+    ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
+input[type="text"] {
+    background-color: #2e2b26;
+    font-family: "Space Mono", monospace;
+    font-weight: 700;
+    color: #74d144;
+
+    text-align: center;
+    border: 0;
+    border: 1px solid #bab6ae;
+    font-size: 4rem;
+    border-radius: 5px;
+
+    width: 100%;
+    height: 5rem;
+}
