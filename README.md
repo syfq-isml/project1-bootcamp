@@ -13,3 +13,7 @@ Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
 The page will reload when you make changes.\
 You may also see any lint errors in the console.
+
+## Credits
+
+Photo by [Andra C Taylor Jr](https://unsplash.com/@taylormadeglobal?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText) on [Unsplash](https://unsplash.com/photos/PCc-8q-sNKU?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText)

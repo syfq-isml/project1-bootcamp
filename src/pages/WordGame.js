@@ -6,8 +6,44 @@ import { Howl, Howler } from "howler";
 import fail808 from "../assets/sounds/fail808.wav";
 import llbreak from "../assets/sounds/fail.wav";
 import succ808 from "../assets/sounds/succ808.wav";
+import {
+    Box,
+    Button,
+    Container,
+    Stack,
+    ThemeProvider,
+    Typography,
+    createTheme,
+    styled,
+} from "@mui/material";
+import BackButton from "../components/Shared/BackButton";
+import InfoButton from "../components/Shared/InfoButton";
+import MuteButton from "../components/Shared/MuteButton";
+import WGScoreboard from "../components/WordGame/WGScoreboard";
+import WGPolaroid from "../components/WordGame/WGPolaroid";
 
 const LOCALSTORAGE_KEY_HISCORE = "hiScores";
+
+const theme = createTheme({
+    typography: {
+        fontFamily: ["Inter", "sans-serif"].join(","),
+        allVariants: {
+            color: "white",
+        },
+    },
+});
+
+const StyledButton = styled(Button)({
+    fontWeight: "700",
+    fontSize: "1.5rem",
+    padding: "1rem 2rem",
+    backgroundColor: "#BC0066",
+    color: "white",
+    width: "fit-content",
+    "&:hover": {
+        backgroundColor: "#940050",
+    },
+});
 
 class WordGame extends Component {
     constructor(props) {
@@ -155,51 +191,133 @@ class WordGame extends Component {
 
     render() {
         return (
-            <>
-                <Link to={"/"}>
-                    <button>Back to main</button>
-                </Link>
-                <button onClick={this.muteSound}>Mute sound</button>
-                {this.state.atGameStart && (
-                    <button onClick={this.selectWord}>Start Game</button>
-                )}
+            <ThemeProvider theme={theme}>
+                <Box className="WORD-GAME">
+                    <Container>
+                        <Stack justifyContent={"center"} alignItems={"center"}>
+                            <Stack
+                                direction={"row"}
+                                justifyContent={"space-between"}
+                                width={"100%"}
+                            >
+                                <Link to={"/"}>
+                                    <BackButton />
+                                </Link>
+                                <Stack direction={"row"} spacing={2}>
+                                    <InfoButton />
+                                    <MuteButton
+                                        onClick={this.muteSound}
+                                        muted={this.state.muted}
+                                    />
+                                </Stack>
+                            </Stack>
 
-                <h2>
-                    Lives left:{" "}
-                    {this.state.gameOver
-                        ? "💀"
-                        : Array(this.state.livesLeft).fill("❤")}
-                </h2>
-                <h2>Score: {this.state.score}</h2>
-                <h2>HiScore: {this.state.hiScore}</h2>
-                <h1>Have you seen this word?</h1>
-                <br />
-                {this.state.gameOver ? (
-                    <button onClick={this.restartGame}>Play Again?</button>
-                ) : (
-                    <>
-                        {!this.state.atGameStart && (
-                            <>
-                                <h1>{this.state.displayWord}</h1>
-                                <h1>{this.state.words}</h1>
-                                <br />
-                                <button
-                                    name="seen"
-                                    onClick={this.checkUserInput}
+                            <Stack
+                                direction={"row"}
+                                justifyContent={"space-evenly"}
+                                alignItems={"center"}
+                                width={"100%"}
+                                padding={2}
+                            >
+                                <WGScoreboard
+                                    firstPart="Score:"
+                                    color="#BC0066"
                                 >
-                                    SEEN
-                                </button>
-                                <button
-                                    name="not-seen"
-                                    onClick={this.checkUserInput}
+                                    {this.state.score}
+                                </WGScoreboard>
+                                <WGScoreboard
+                                    firstPart="Lives left:"
+                                    color="#BC0066"
                                 >
-                                    NOT YET SEEN
-                                </button>
-                            </>
-                        )}
-                    </>
-                )}
-            </>
+                                    {this.state.gameOver
+                                        ? "💀"
+                                        : Array(this.state.livesLeft).fill("❤")}
+                                </WGScoreboard>
+                                <WGScoreboard
+                                    firstPart="HiScore:"
+                                    color="#BC0066"
+                                >
+                                    {this.state.hiScore}
+                                </WGScoreboard>
+                            </Stack>
+
+                            <Typography variant="h3" fontWeight={"700"}>
+                                Have you seen this word?
+                            </Typography>
+                            <Typography variant="h5" fontWeight={"400"}>
+                                If you have, click "Seen".
+                            </Typography>
+                            <Typography variant="h5">
+                                If you have not, click "New".
+                            </Typography>
+                            {this.state.atGameStart && (
+                                <StyledButton
+                                    disableRipple
+                                    onClick={this.selectWord}
+                                    sx={{ mt: 3 }}
+                                >
+                                    Start Game
+                                </StyledButton>
+                            )}
+
+                            {!this.state.gameOver &&
+                                !this.state.atGameStart && (
+                                    <>
+                                        <WGPolaroid>
+                                            <Typography
+                                                variant="h2"
+                                                fontWeight={"700"}
+                                                fontFamily={
+                                                    "'Merriweather', serif"
+                                                }
+                                            >
+                                                {this.state.displayWord}
+                                            </Typography>
+
+                                            {/* <h1>{this.state.words}</h1> */}
+                                        </WGPolaroid>
+                                        <Stack
+                                            direction={"row"}
+                                            spacing={5}
+                                            mt={3}
+                                        >
+                                            <StyledButton
+                                                disableRipple
+                                                name="seen"
+                                                onClick={this.checkUserInput}
+                                            >
+                                                SEEN
+                                            </StyledButton>
+                                            <StyledButton
+                                                disableRipple
+                                                name="not-seen"
+                                                onClick={this.checkUserInput}
+                                            >
+                                                NEW
+                                            </StyledButton>
+                                        </Stack>
+                                    </>
+                                )}
+                            {this.state.gameOver && (
+                                <StyledButton
+                                    disableRipple
+                                    onClick={this.restartGame}
+                                    sx={{
+                                        mt: 3,
+                                        backgroundColor: "white",
+                                        color: "#BC0066",
+                                        "&:hover": {
+                                            backgroundColor: "#F2F2F2",
+                                        },
+                                    }}
+                                >
+                                    Play Again?
+                                </StyledButton>
+                            )}
+                        </Stack>
+                    </Container>
+                </Box>
+            </ThemeProvider>
         );
     }
 }
