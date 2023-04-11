@@ -38,7 +38,7 @@ class SSButton extends Component {
 
     componentDidUpdate(prevProps, prevState) {
         if (prevProps.toLightUp !== this.props.toLightUp) {
-            if (this.props.id === this.props.toLightUp) {
+            if (this.props.id.toString() === this.props.toLightUp[0]) {
                 this.computerClick();
                 console.log("Being called in children");
             }

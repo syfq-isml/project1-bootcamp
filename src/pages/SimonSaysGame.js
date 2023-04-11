@@ -92,13 +92,6 @@ class SimonSaysGame extends Component {
 
     generateSequence = () => {
         let randomNumber = getRandomIntInclusive(0, 8);
-        if (
-            randomNumber ===
-            this.state.currentSequence[this.state.currentSequence.length - 1]
-        ) {
-            this.generateSequence();
-            return;
-        }
         this.setState((prevState) => {
             return {
                 currentSequence: [...prevState.currentSequence, randomNumber],
@@ -112,14 +105,15 @@ class SimonSaysGame extends Component {
                 this.setState(
                     (prevState) => {
                         return {
-                            currentButtonToLightUp:
-                                prevState.currentSequence[i],
+                            currentButtonToLightUp: `${
+                                prevState.currentSequence[i]
+                            }${String.fromCharCode(97 + i)}`,
                         };
                     },
-                    () =>
-                        this.xyloSound.play(
-                            `xylo${this.state.currentButtonToLightUp + 1}`
-                        )
+                    () => {
+                        let buttonId = this.state.currentButtonToLightUp[0];
+                        this.xyloSound.play(`xylo${+buttonId + 1}`);
+                    }
                 );
                 console.log(
                     "Button to light up: " + this.state.currentButtonToLightUp
