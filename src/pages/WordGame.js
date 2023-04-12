@@ -113,9 +113,9 @@ class WordGame extends Component {
     selectWord = () => {
         // roll a dice
         this.setState({ atGameStart: false });
-        let outcome = getRandomIntInclusive(1, 3);
+        let outcome = getRandomIntInclusive(1, 2);
 
-        // 2/3 chance to get a new word
+        // 1/2 chance to get a new word
         if (this.state.score < 5 || outcome !== 1) {
             let newWord = getRandomWord();
             this.setState((prevState) => {

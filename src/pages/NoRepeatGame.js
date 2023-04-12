@@ -258,7 +258,7 @@ class NoRepeatGame extends Component {
                                     sx={{
                                         display: "flex",
                                         gap: "1rem",
-                                        width: "800px",
+                                        width: { sm: "800px", xs: "300px" },
                                         flexWrap: "wrap",
                                     }}
                                 >

@@ -9,6 +9,15 @@ import Home from "./pages/Home";
 
 import { HashRouter, Route, Routes } from "react-router-dom";
 
+import {
+    ThemeProvider,
+    createTheme,
+    responsiveFontSizes,
+} from "@mui/material/styles";
+
+let theme = createTheme();
+theme = responsiveFontSizes(theme);
+
 class App extends React.Component {
     sayHello = () => {
         console.log("say hello");
@@ -16,20 +25,28 @@ class App extends React.Component {
 
     render() {
         return (
-            <div className="App">
-                <HashRouter>
-                    <Routes>
-                        <Route path="/" element={<Home />} />
-                        <Route path="simon-says" element={<SimonSaysGame />} />
-                        <Route path="word-game" element={<WordGame />} />
-                        <Route path="number-game" element={<NumberGame />} />
-                        <Route
-                            path="no-repeat-game"
-                            element={<NoRepeatGame />}
-                        />
-                    </Routes>
-                </HashRouter>
-            </div>
+            <ThemeProvider theme={theme}>
+                <div className="App">
+                    <HashRouter>
+                        <Routes>
+                            <Route path="/" element={<Home />} />
+                            <Route
+                                path="simon-says"
+                                element={<SimonSaysGame />}
+                            />
+                            <Route path="word-game" element={<WordGame />} />
+                            <Route
+                                path="number-game"
+                                element={<NumberGame />}
+                            />
+                            <Route
+                                path="no-repeat-game"
+                                element={<NoRepeatGame />}
+                            />
+                        </Routes>
+                    </HashRouter>
+                </div>
+            </ThemeProvider>
         );
     }
 }

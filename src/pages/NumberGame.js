@@ -326,13 +326,20 @@ class NumberGame extends Component {
                                                 "'Space Mono', monospace"
                                             }
                                             color={"#74D144"}
-                                            fontSize={
-                                                this.state.currentSequence
-                                                    .length > 10
-                                                    ? "4rem"
-                                                    : "5rem"
-                                            }
+                                            // fontSize={
+                                            //     this.state.currentSequence
+                                            //         .length > 10
+                                            //         ? "4rem"
+                                            //         : "5rem"
+                                            // }
+
                                             fontWeight={"700"}
+                                            sx={{
+                                                fontSize: {
+                                                    xs: "30px",
+                                                    sm: "4rem",
+                                                },
+                                            }}
                                         >
                                             {this.state.display}
                                         </Typography>
