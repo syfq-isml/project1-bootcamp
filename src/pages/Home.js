@@ -14,17 +14,18 @@ import brainImg from "../assets/images/brain_animated.png";
 import brainBrawn from "../assets/images/Brainbrawn_circle.png";
 
 import { getRandomIntInclusive } from "../utils";
+import Banner from "../components/Home/Banner";
 
 const LOCALSTORAGE_KEY_HISCORE = "hiScores";
 
 const StyledButton = styled(Button)({
-    backgroundColor: "#B5EBC6",
+    backgroundColor: "#affe9f",
     fontWeight: "700",
     fontSize: "1.7rem",
     padding: "1rem 2rem",
     color: "black",
     "&:hover": {
-        backgroundColor: "#61D8A8",
+        backgroundColor: "#9AEB9E",
     },
 });
 
@@ -147,23 +148,46 @@ class Home extends Component {
                         </Stack>
                     </Container>
                 </Box>
-                <Box component="section">
-                    This is the image carousel
-                    <Link to={"simon-says"}>
-                        <button>To Simon Says</button>
-                    </Link>
-                    <Link to={"word-game"}>
-                        <button>Word Game</button>
-                    </Link>
-                    <Link to={"number-game"}>
-                        <button>number game</button>
-                    </Link>
-                    <Link to={"no-repeat-game"}>
-                        <button>No repeat</button>
-                    </Link>
-                    <h1>All hiScores:</h1>
-                    <h2>{this.state.hiScores.NR}</h2>
-                </Box>
+                <Container>
+                    <Stack component="section" id="games" spacing={3} my={5}>
+                        <Link to={"word-game"}>
+                            <Banner
+                                className="red HOME-btns"
+                                color="#70044B"
+                                hiScore={this.state.hiScores.WG}
+                            >
+                                Seen it?
+                            </Banner>
+                        </Link>
+                        <Link to={"no-repeat-game"}>
+                            <Banner
+                                className="orange HOME-btns"
+                                color="#706804"
+                                hiScore={this.state.hiScores.NR}
+                            >
+                                Repeat: null
+                            </Banner>
+                        </Link>
+                        <Link to={"number-game"}>
+                            <Banner
+                                className="green HOME-btns"
+                                color="#047018"
+                                hiScore={this.state.hiScores.NG}
+                            >
+                                Numbrrr
+                            </Banner>
+                        </Link>
+                        <Link to={"simon-says"}>
+                            <Banner
+                                className="blue HOME-btns"
+                                color="#044C70"
+                                hiScore={this.state.hiScores.SS}
+                            >
+                                Simone Sez
+                            </Banner>
+                        </Link>
+                    </Stack>
+                </Container>
             </>
         );
     }
