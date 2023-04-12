@@ -1,4 +1,4 @@
-import { Paper, Stack, Typography } from "@mui/material";
+import { Paper, Typography } from "@mui/material";
 import React, { Component } from "react";
 
 class WGScoreboard extends Component {

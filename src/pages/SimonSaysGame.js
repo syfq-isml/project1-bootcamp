@@ -1,17 +1,49 @@
 import React, { Component } from "react";
 import SSButton from "../components/SimonSays/SSButton";
 import { getRandomIntInclusive, timeout } from "../utils";
-import { Link } from "react-router-dom";
 import { Howl, Howler } from "howler";
 
 import fail808 from "../assets/sounds/fail808.wav";
 import succ808 from "../assets/sounds/succ808.wav";
 
 import xyloSounds from "../assets/sounds/xylo/xyloSounds.mp3";
+import SSNav from "../components/SimonSays/SSNav";
+import {
+    Box,
+    Button,
+    Container,
+    Stack,
+    ThemeProvider,
+    Typography,
+    createTheme,
+} from "@mui/material";
+import SSScoreboard from "../components/SimonSays/SSScoreboard";
+import styled from "@emotion/styled";
 
 let emptyArray = new Array(9).fill("");
 
 const LOCALSTORAGE_KEY_HISCORE = "hiScores";
+
+const theme = createTheme({
+    typography: {
+        fontFamily: ["Inter", "sans-serif"].join(","),
+        allVariants: {
+            color: "white",
+        },
+    },
+});
+
+const StyledButton = styled(Button)({
+    fontWeight: "700",
+    fontSize: "1.5rem",
+    padding: "1rem 2rem",
+    backgroundColor: "#0D4C85",
+    color: "white",
+    width: "fit-content",
+    "&:hover": {
+        backgroundColor: "#0B3B66",
+    },
+});
 
 class SimonSaysGame extends Component {
     constructor(props) {
@@ -23,8 +55,9 @@ class SimonSaysGame extends Component {
             hiScore: 0,
             playerIsGuessing: false,
             steps: 0,
-            announcement: "",
+            isGameOver: false,
             showNextButton: true,
+            lastLitButton: 11,
 
             muted: false,
         };
@@ -125,8 +158,8 @@ class SimonSaysGame extends Component {
     handleGameStart = async () => {
         await this.setState({
             currentButtonToLightUp: 11,
-            announcement: "",
             showNextButton: false,
+            isGameOver: false,
         });
         await this.generateSequence();
         await timeout(1000);
@@ -138,7 +171,10 @@ class SimonSaysGame extends Component {
     checkCorrectInput = (id) => {
         if (this.state.currentSequence[this.state.steps] !== id) {
             this.failSound.play();
-            this.setState({ announcement: "Wrong!" });
+            this.setState({
+                isGameOver: true,
+                lastLitButton: this.state.currentSequence[this.state.steps],
+            });
             this.restartGame();
             return;
         }
@@ -155,7 +191,6 @@ class SimonSaysGame extends Component {
                     this.setState(
                         (prevState) => {
                             return {
-                                announcement: "Round won!",
                                 steps: 0,
                                 showNextButton: true,
                                 playerIsGuessing: false,
@@ -179,7 +214,7 @@ class SimonSaysGame extends Component {
             highScore: 0,
             playerIsGuessing: false,
             steps: 0,
-            showNextButton: true,
+            // isGameOver: false,
         });
     };
 
@@ -200,42 +235,96 @@ class SimonSaysGame extends Component {
 
     render() {
         return (
-            <>
-                <button onClick={this.handleTest}>Test</button>
-                <Link to={"/"}>
-                    <button>Back to main</button>
-                </Link>
-                <button onClick={this.muteSound}>Mute sound</button>
-                <h1>Level: {this.state.currentSequence.length}</h1>
-                <h2>HiScore: {this.state.hiScore}</h2>
-                {this.state.showNextButton && (
-                    <button onClick={this.handleGameStart}>Start Game</button>
-                )}
-                <h1>{this.state.announcement}</h1>
-                <div
-                    style={{
-                        display: "flex",
-                        width: "700px",
-                        height: "700px",
-                        flexWrap: "wrap",
-                        gap: "10px",
-                        justifyContent: "center",
-                        alignItems: "center",
-                    }}
-                >
-                    {emptyArray.map((elem, index) => {
-                        return (
-                            <SSButton
-                                key={index}
-                                id={index}
-                                isDisabled={!this.state.playerIsGuessing}
-                                toLightUp={this.state.currentButtonToLightUp}
-                                onCheckCorrectInput={this.checkCorrectInput}
+            <ThemeProvider theme={theme}>
+                <Box className="SIMON-SAYS">
+                    <Container>
+                        <Stack alignItems={"center"} justifyContent={"center"}>
+                            <SSNav
+                                muted={this.state.muted}
+                                muteSound={this.muteSound}
                             />
-                        );
-                    })}
-                </div>
-            </>
+                            <Typography variant="h3" fontWeight={"700"}>
+                                How long can you go?
+                            </Typography>
+                            <Typography variant="h5" fontWeight={"400"}>
+                                Memorize the pattern and click them in sequence.
+                            </Typography>
+                            <Typography variant="h5" fontWeight={"400"}>
+                                The pattern gets longer every time you get it
+                                right.
+                            </Typography>
+                            <Typography variant="h5" fontWeight={"400"}>
+                                1 mistake and you're out!
+                            </Typography>
+
+                            <SSScoreboard
+                                level={this.state.currentSequence.length}
+                                hiScore={this.state.hiScore}
+                                color="blue"
+                            />
+
+                            <Box
+                                sx={{
+                                    display: "flex",
+                                    width: "700px",
+                                    flexWrap: "wrap",
+                                    gap: "1rem",
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                }}
+                            >
+                                {emptyArray.map((elem, index) => {
+                                    return (
+                                        <SSButton
+                                            key={index}
+                                            id={index}
+                                            isDisabled={
+                                                !this.state.playerIsGuessing
+                                            }
+                                            toLightUp={
+                                                this.state
+                                                    .currentButtonToLightUp
+                                            }
+                                            onCheckCorrectInput={
+                                                this.checkCorrectInput
+                                            }
+                                            isGameOver={this.state.isGameOver}
+                                            lastLight={this.state.lastLitButton}
+                                        />
+                                    );
+                                })}
+                            </Box>
+                            {this.state.showNextButton && (
+                                <StyledButton
+                                    disableRipple
+                                    onClick={this.handleGameStart}
+                                    sx={{
+                                        mt: 3,
+                                    }}
+                                >
+                                    Start Game
+                                </StyledButton>
+                            )}
+                            {this.state.isGameOver && (
+                                <StyledButton
+                                    disableRipple
+                                    onClick={this.handleGameStart}
+                                    sx={{
+                                        mt: 3,
+                                        backgroundColor: "white",
+                                        color: "#1164AF",
+                                        "&:hover": {
+                                            backgroundColor: "#F2F2F2",
+                                        },
+                                    }}
+                                >
+                                    Play Again
+                                </StyledButton>
+                            )}
+                        </Stack>
+                    </Container>
+                </Box>
+            </ThemeProvider>
         );
     }
 }

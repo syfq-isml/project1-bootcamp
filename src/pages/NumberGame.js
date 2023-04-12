@@ -199,6 +199,7 @@ class NumberGame extends Component {
                                 direction={"row"}
                                 justifyContent={"space-between"}
                                 width={"100%"}
+                                mt={3}
                             >
                                 <Link to={"/"}>
                                     <BackButton />
@@ -211,7 +212,7 @@ class NumberGame extends Component {
                                     />
                                 </Stack>
                             </Stack>
-                            <Typography variant="h3" fontWeight={"700"}>
+                            <Typography variant="h3" fontWeight={"700"} mt={3}>
                                 Try to remember the longest number you can.
                             </Typography>
                             <Typography variant="h4" fontWeight={"400"}>

@@ -177,6 +177,7 @@ class NoRepeatGame extends Component {
                                     direction={"row"}
                                     justifyContent={"space-between"}
                                     width={"100%"}
+                                    mt={3}
                                 >
                                     <Link to={"/"}>
                                         <BackButton />

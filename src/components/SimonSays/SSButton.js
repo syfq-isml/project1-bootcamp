@@ -27,15 +27,6 @@ class SSButton extends Component {
         });
     }
 
-    // componentDidMount(prevProps, prevState) {
-    //     // if (prevProps.toLightUp !== this.props.toLightUp) {
-    //     if (this.props.id === +this.props.toLightUp) {
-    //         this.computerClick();
-    //         console.log("Being called in children");
-    //     }
-    //     // }
-    // }
-
     componentDidUpdate(prevProps, prevState) {
         if (prevProps.toLightUp !== this.props.toLightUp) {
             if (this.props.id.toString() === this.props.toLightUp[0]) {
@@ -63,18 +54,44 @@ class SSButton extends Component {
     };
 
     render() {
+        let bgColor, borderStyle;
+        if (!this.props.isGameOver) {
+            if (this.state.isLitUp) {
+                bgColor = "#EAF6E7";
+                borderStyle = "0";
+            } else {
+                bgColor = "#0A71E1";
+                borderStyle = "0";
+            }
+        } else {
+            if (this.props.lastLight === this.props.id) {
+                bgColor = "#EAF6E7";
+                borderStyle = "0";
+            } else {
+                bgColor = "rgb(11, 125, 175, 0.6)";
+                borderStyle = "4px solid white";
+            }
+        }
         return (
             <button
                 style={{
                     width: "200px",
                     height: "200px",
-                    border: "0",
-                    backgroundColor: this.state.isLitUp ? "#EAF6E7" : "#72A368",
+                    backgroundColor: bgColor,
+                    border: borderStyle,
                     borderRadius: "7px",
                 }}
                 onClick={this.userHandleClick}
                 disabled={this.props.isDisabled ? true : false}
-            ></button>
+            >
+                {this.props.isGameOver &&
+                    this.props.lastLight === this.props.id && (
+                        <>
+                            <p>it was me</p>
+                            <p>i was next</p>
+                        </>
+                    )}
+            </button>
         );
     }
 }

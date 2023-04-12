@@ -199,6 +199,7 @@ class WordGame extends Component {
                                 direction={"row"}
                                 justifyContent={"space-between"}
                                 width={"100%"}
+                                mt={3}
                             >
                                 <Link to={"/"}>
                                     <BackButton />
@@ -211,6 +212,16 @@ class WordGame extends Component {
                                     />
                                 </Stack>
                             </Stack>
+
+                            <Typography variant="h3" fontWeight={"700"}>
+                                Have you seen this word?
+                            </Typography>
+                            <Typography variant="h5" fontWeight={"400"}>
+                                If you have, click "Seen".
+                            </Typography>
+                            <Typography variant="h5">
+                                If you have not, click "New".
+                            </Typography>
 
                             <Stack
                                 direction={"row"}
@@ -241,15 +252,6 @@ class WordGame extends Component {
                                 </WGScoreboard>
                             </Stack>
 
-                            <Typography variant="h3" fontWeight={"700"}>
-                                Have you seen this word?
-                            </Typography>
-                            <Typography variant="h5" fontWeight={"400"}>
-                                If you have, click "Seen".
-                            </Typography>
-                            <Typography variant="h5">
-                                If you have not, click "New".
-                            </Typography>
                             {this.state.atGameStart && (
                                 <StyledButton
                                     disableRipple
