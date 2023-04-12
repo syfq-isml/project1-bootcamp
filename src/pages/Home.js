@@ -11,6 +11,7 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 
 import brainImg from "../assets/images/brain_animated.png";
+import { getRandomIntInclusive } from "../utils";
 
 const LOCALSTORAGE_KEY_HISCORE = "hiScores";
 
@@ -24,6 +25,13 @@ const StyledButton = styled(Button)({
         backgroundColor: "#61D8A8",
     },
 });
+
+const map = new Map([
+    [0, "simon-says"],
+    [1, "word-game"],
+    [2, "number-game"],
+    [3, "no-repeat-game"],
+]);
 
 class Home extends Component {
     constructor(props) {
@@ -110,13 +118,20 @@ class Home extends Component {
                                     Measure your abilities with these specially
                                     curated cognitive tests.
                                 </Typography>
-                                <StyledButton
-                                    disableRipple
-                                    variant="contained"
-                                    size="large"
+                                <Link
+                                    style={{ textDecoration: "none" }}
+                                    to={`${map.get(
+                                        getRandomIntInclusive(0, 3)
+                                    )}`}
                                 >
-                                    Let's Go!
-                                </StyledButton>
+                                    <StyledButton
+                                        disableRipple
+                                        variant="contained"
+                                        size="large"
+                                    >
+                                        Let's Go!
+                                    </StyledButton>
+                                </Link>
                             </Stack>
                         </Stack>
                     </Container>
