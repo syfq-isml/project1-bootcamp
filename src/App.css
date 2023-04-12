@@ -13,6 +13,32 @@
     align-items: center;
 }
 
+.logo-spinner {
+    animation: rotationParent 60s infinite linear;
+}
+
+.logo-spinner__child {
+    animation: rotationChild 60s infinite linear;
+}
+
+@keyframes rotationParent {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(359deg);
+    }
+}
+
+@keyframes rotationChild {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(-359deg);
+    }
+}
+
 .NO-REPEAT {
     /* display: flex;
     flex-direction: column;
