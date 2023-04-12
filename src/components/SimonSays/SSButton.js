@@ -75,8 +75,8 @@ class SSButton extends Component {
         return (
             <button
                 style={{
-                    width: "200px",
-                    height: "200px",
+                    width: "150px",
+                    height: "150px",
                     backgroundColor: bgColor,
                     border: borderStyle,
                     borderRadius: "7px",

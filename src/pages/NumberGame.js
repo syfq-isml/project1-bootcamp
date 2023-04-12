@@ -229,14 +229,14 @@ class NumberGame extends Component {
                                 Try to remember the longest number you can.
                             </Typography>
                             <Typography
-                                variant="h4"
+                                variant="h5"
                                 fontWeight={"400"}
                                 textAlign={"center"}
                             >
                                 The average person can remember 7 numbers at
                                 once.
                             </Typography>
-                            <Typography variant="h4" fontWeight={"400"}>
+                            <Typography variant="h5" fontWeight={"400"}>
                                 Can{" "}
                                 <strong>
                                     <em>you</em>

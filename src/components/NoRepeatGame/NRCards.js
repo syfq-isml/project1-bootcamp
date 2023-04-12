@@ -4,16 +4,15 @@ import React, { Component } from "react";
 const StyledButton = styled(Button)({
     fontWeight: "700",
     fontSize: "1rem",
-    width: "170px",
+    width: "130px",
     aspectRatio: "1/1",
     color: "white",
 });
 
 // const StyledButton = styled(Button)({
 //     fontWeight: "700",
-//     fontSize: { xs: "11px", sm: "1rem" },
-//     width: { xs: "200px", sm: "170px" },
-
+//     fontSize: "1rem",
+//     width: "170px",
 //     aspectRatio: "1/1",
 //     color: "white",
 // });

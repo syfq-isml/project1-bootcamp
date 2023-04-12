@@ -15,7 +15,11 @@ import {
     responsiveFontSizes,
 } from "@mui/material/styles";
 
-let theme = createTheme();
+let theme = createTheme({
+    typography: {
+        fontFamily: ["Inter", "sans-serif"].join(","),
+    },
+});
 theme = responsiveFontSizes(theme);
 
 class App extends React.Component {

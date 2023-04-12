@@ -192,7 +192,7 @@ class NoRepeatGame extends Component {
                                 </Stack>
 
                                 <Typography
-                                    variant="h3"
+                                    variant="h4"
                                     fontWeight={"700"}
                                     textAlign={"center"}
                                 >
@@ -258,7 +258,7 @@ class NoRepeatGame extends Component {
                                     sx={{
                                         display: "flex",
                                         gap: "1rem",
-                                        width: { sm: "800px", xs: "300px" },
+                                        width: { sm: "700px", xs: "300px" },
                                         flexWrap: "wrap",
                                     }}
                                 >

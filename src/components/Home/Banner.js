@@ -8,7 +8,7 @@ class Banner extends Component {
                 className={this.props.className}
                 sx={{ height: "16vh", borderRadius: 2, overflow: "hidden" }}
             >
-                <Typography variant="h1" fontWeight={700} p={2}>
+                <Typography variant="h2" fontWeight={700} p={2}>
                     {this.props.children}
                 </Typography>
                 <Paper

@@ -282,7 +282,7 @@ class SimonSaysGame extends Component {
                             <Box
                                 sx={{
                                     display: "flex",
-                                    width: "700px",
+                                    width: "600px",
                                     flexWrap: "wrap",
                                     gap: "1rem",
                                     justifyContent: "center",
