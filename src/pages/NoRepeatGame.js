@@ -191,7 +191,11 @@ class NoRepeatGame extends Component {
                                     </Stack>
                                 </Stack>
 
-                                <Typography variant="h3" fontWeight={"700"}>
+                                <Typography
+                                    variant="h3"
+                                    fontWeight={"700"}
+                                    textAlign={"center"}
+                                >
                                     Click on each card exactly once!
                                 </Typography>
                                 <Stack
