@@ -21,6 +21,8 @@ import {
     styled,
 } from "@mui/material";
 
+import doggo from "../assets/images/dog.png";
+
 const LOCALSTORAGE_KEY_HISCORE = "hiScores";
 
 const theme = createTheme({
@@ -54,6 +56,7 @@ class NoRepeatGame extends Component {
             alreadyClicked: [],
             isGameOver: false,
             lastClickedWord: "",
+            isGameWon: false,
 
             muted: false,
         };
@@ -111,14 +114,28 @@ class NoRepeatGame extends Component {
             this.setState({ isGameOver: true, lastClickedWord: word });
         } else {
             this.successSound.play();
-            this.setState((prevState) => {
-                return {
-                    score: prevState.score + 1,
-                    hiScore: Math.max(prevState.score + 1, prevState.hiScore),
-                    wordsArray: [...shuffle(prevState.wordsArray)],
-                    alreadyClicked: [...prevState.alreadyClicked, word],
-                };
-            });
+            this.setState(
+                (prevState) => {
+                    return {
+                        score: prevState.score + 1,
+                        hiScore: Math.max(
+                            prevState.score + 1,
+                            prevState.hiScore
+                        ),
+                        wordsArray: [...shuffle(prevState.wordsArray)],
+                        alreadyClicked: [...prevState.alreadyClicked, word],
+                    };
+                },
+                () => {
+                    if (
+                        this.state.wordsArray.length ===
+                        this.state.alreadyClicked.length
+                    ) {
+                        this.setState({ isGameWon: true });
+                        return;
+                    }
+                }
+            );
         }
 
         // let newHighScore = Math.max(this.state.score, this.state.hiScore);
@@ -131,6 +148,7 @@ class NoRepeatGame extends Component {
             wordsArray: getArrayOfWords(16),
             alreadyClicked: [],
             isGameOver: false,
+            isGameWon: false,
         });
     };
 
@@ -239,24 +257,25 @@ class NoRepeatGame extends Component {
                                         flexWrap: "wrap",
                                     }}
                                 >
-                                    {this.state.wordsArray.map((word) => {
-                                        let bool =
-                                            this.state.alreadyClicked.includes(
-                                                word
-                                            );
+                                    {!this.state.isGameWon &&
+                                        this.state.wordsArray.map((word) => {
+                                            let bool =
+                                                this.state.alreadyClicked.includes(
+                                                    word
+                                                );
 
-                                        return (
-                                            <NRCards
-                                                key={`00x${word}`}
-                                                word={word}
-                                                onClick={this.handleClick}
-                                                isGameOver={
-                                                    this.state.isGameOver
-                                                }
-                                                isAlreadyClicked={bool}
-                                            />
-                                        );
-                                    })}
+                                            return (
+                                                <NRCards
+                                                    key={`00x${word}`}
+                                                    word={word}
+                                                    onClick={this.handleClick}
+                                                    isGameOver={
+                                                        this.state.isGameOver
+                                                    }
+                                                    isAlreadyClicked={bool}
+                                                />
+                                            );
+                                        })}
                                 </Box>
                                 {this.state.isGameOver && (
                                     <Stack
@@ -292,6 +311,26 @@ class NoRepeatGame extends Component {
                                             Play again
                                         </StyledButton>
                                     </Stack>
+                                )}
+                                {this.state.isGameWon && (
+                                    <>
+                                        <Typography
+                                            variant="h2"
+                                            fontWeight={700}
+                                        >
+                                            Hey, wow, you actually did it!
+                                        </Typography>
+                                        <Typography variant="h4">
+                                            For your hard work, enjoy this happy
+                                            little doggo.
+                                        </Typography>
+                                        <img src={doggo} alt="lil dog" />
+                                        <StyledButton
+                                            onClick={this.restartGame}
+                                        >
+                                            Play again
+                                        </StyledButton>
+                                    </>
                                 )}
                             </Stack>
                         </Box>
