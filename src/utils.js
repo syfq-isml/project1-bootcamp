@@ -39,10 +39,17 @@ function shuffle(array) {
     return array;
 }
 
+function isAllNumbers(inputtxt) {
+    var letters = /^[0-9]+$/;
+    if (inputtxt.match(letters)) return true;
+    return false;
+}
+
 export {
     getRandomIntInclusive,
     timeout,
     getRandomWord,
     shuffle,
     getArrayOfWords,
+    isAllNumbers,
 };

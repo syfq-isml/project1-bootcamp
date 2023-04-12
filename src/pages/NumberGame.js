@@ -2,10 +2,8 @@ import React, { Component } from "react";
 import { getRandomIntInclusive, timeout } from "../utils";
 import { Link } from "react-router-dom";
 import { Howl, Howler } from "howler";
-
-import fail808 from "../assets/sounds/fail808.wav";
-import succ808 from "../assets/sounds/succ808.wav";
 import {
+    Alert,
     Box,
     Button,
     Container,
@@ -16,6 +14,12 @@ import {
     createTheme,
     styled,
 } from "@mui/material";
+
+import fail808 from "../assets/sounds/fail808.wav";
+import succ808 from "../assets/sounds/succ808.wav";
+
+import { isAllNumbers } from "../utils";
+
 import BackButton from "../components/Shared/BackButton";
 import MuteButton from "../components/Shared/MuteButton";
 import InfoButton from "../components/Shared/InfoButton";
@@ -65,6 +69,7 @@ class NumberGame extends Component {
             showLossScreen: false,
 
             muted: false,
+            error: "",
         };
 
         this.successSound = new Howl({
@@ -158,7 +163,10 @@ class NumberGame extends Component {
     handleSubmit = (e) => {
         e.preventDefault();
         let input = this.state.userInput.trim();
-        if (input === "") return;
+        if (input === "" || !isAllNumbers(input)) {
+            this.setState({ error: "Type in numbers only!" });
+            return;
+        }
 
         if (input === this.state.currentSequence.join("")) {
             this.successSound.play();
@@ -175,7 +183,7 @@ class NumberGame extends Component {
     };
 
     handleChange = (e) => {
-        this.setState({ userInput: e.target.value });
+        this.setState({ userInput: e.target.value, error: "" });
     };
 
     muteSound = () => {
@@ -409,6 +417,17 @@ class NumberGame extends Component {
                                     />
                                 </Stack>
                             </Paper>
+                            {this.state.error !== "" && (
+                                <Alert
+                                    variant="filled"
+                                    severity="error"
+                                    sx={{
+                                        backgroundColor: "#F64F4F",
+                                    }}
+                                >
+                                    {this.state.error}
+                                </Alert>
+                            )}
                             {this.state.showLossScreen && (
                                 // <Stack
                                 //     alignItems={"center"}
