@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/project1-bootcamp/static/css/main.267d7420.css",
-    "main.js": "/project1-bootcamp/static/js/main.8246c4e3.js",
+    "main.js": "/project1-bootcamp/static/js/main.d25fda46.js",
     "static/media/fail808.wav": "/project1-bootcamp/static/media/fail808.0e895dfdb50c8d274759.wav",
     "static/media/brain_animated.png": "/project1-bootcamp/static/media/brain_animated.09d9da3e051ac096bbf9.png",
     "static/media/succ808.wav": "/project1-bootcamp/static/media/succ808.7ea8ca72622cbd023571.wav",
@@ -12,10 +12,10 @@
     "static/media/fail.wav": "/project1-bootcamp/static/media/fail.c5c5711538442aad4f1a.wav",
     "index.html": "/project1-bootcamp/index.html",
     "main.267d7420.css.map": "/project1-bootcamp/static/css/main.267d7420.css.map",
-    "main.8246c4e3.js.map": "/project1-bootcamp/static/js/main.8246c4e3.js.map"
+    "main.d25fda46.js.map": "/project1-bootcamp/static/js/main.d25fda46.js.map"
   },
   "entrypoints": [
     "static/css/main.267d7420.css",
-    "static/js/main.8246c4e3.js"
+    "static/js/main.d25fda46.js"
   ]
 }
