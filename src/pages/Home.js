@@ -1,40 +1,12 @@
-import {
-    Box,
-    Button,
-    Container,
-    Paper,
-    Stack,
-    Typography,
-    styled,
-} from "@mui/material";
+import { Box, Container, Stack } from "@mui/material";
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 
-import brainImg from "../assets/images/brain_animated.png";
-import brainBrawn from "../assets/images/Brainbrawn_circle.png";
-
-import { getRandomIntInclusive } from "../utils";
 import Banner from "../components/Home/Banner";
+import HomeLogo from "../components/Home/HomeLogo";
+import HomeHeadings from "../components/Home/HomeHeadings";
 
 const LOCALSTORAGE_KEY_HISCORE = "hiScores";
-
-const StyledButton = styled(Button)({
-    backgroundColor: "#affe9f",
-    fontWeight: "700",
-    fontSize: "1.7rem",
-    padding: "1rem 2rem",
-    color: "black",
-    "&:hover": {
-        backgroundColor: "#9AEB9E",
-    },
-});
-
-const map = new Map([
-    [0, "simon-says"],
-    [1, "word-game"],
-    [2, "number-game"],
-    [3, "no-repeat-game"],
-]);
 
 class Home extends Component {
     constructor(props) {
@@ -82,69 +54,8 @@ class Home extends Component {
                             textAlign={"center"}
                             spacing={2}
                         >
-                            <Paper
-                                className="fl-row fl-centered logo-spinner"
-                                style={{
-                                    borderRadius: "50%",
-                                    width: "20vw",
-                                    height: "auto",
-                                    aspectRatio: "1/1",
-                                    backgroundImage: `url(${brainBrawn})`,
-                                    backgroundSize: "32vw",
-                                    backgroundPosition: "center",
-                                    backgroundRepeat: "no-repeat",
-                                    backgroundColor: "#fdf7ea",
-                                }}
-                                elevation={0}
-                            >
-                                <Paper
-                                    className="fl-row fl-centered"
-                                    style={{
-                                        borderRadius: "50%",
-                                        width: "60%",
-                                        height: "auto",
-                                        aspectRatio: "1/1",
-                                        backgroundColor: "#fdf7ea",
-                                    }}
-                                    elevation={0}
-                                >
-                                    <img
-                                        className="logo-spinner__child"
-                                        src={brainImg}
-                                        alt="animated brain"
-                                        style={{
-                                            width: "100%",
-                                        }}
-                                    />
-                                </Paper>
-                            </Paper>
-                            <Stack className="fl-col fl-centered" spacing={2}>
-                                <Typography
-                                    variant="h1"
-                                    component="h1"
-                                    fontWeight={"800"}
-                                >
-                                    How brawny is your brain?
-                                </Typography>
-                                <Typography variant="h4" component={"h1"}>
-                                    Measure your abilities with these specially
-                                    curated cognitive tests.
-                                </Typography>
-                                <Link
-                                    style={{ textDecoration: "none" }}
-                                    to={`${map.get(
-                                        getRandomIntInclusive(0, 3)
-                                    )}`}
-                                >
-                                    <StyledButton
-                                        disableRipple
-                                        variant="contained"
-                                        size="large"
-                                    >
-                                        Let's Go!
-                                    </StyledButton>
-                                </Link>
-                            </Stack>
+                            <HomeLogo />
+                            <HomeHeadings />
                         </Stack>
                     </Container>
                 </Box>
