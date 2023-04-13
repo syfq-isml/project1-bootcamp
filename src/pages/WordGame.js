@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { getRandomIntInclusive, getRandomWord, shuffle } from "../utils";
-import { Link } from "react-router-dom";
 import { Howl, Howler } from "howler";
 
 import fail808 from "../assets/sounds/fail808.wav";
@@ -12,15 +11,14 @@ import {
     Container,
     Stack,
     ThemeProvider,
-    Typography,
     createTheme,
     styled,
 } from "@mui/material";
-import BackButton from "../components/Shared/BackButton";
-import InfoButton from "../components/Shared/InfoButton";
-import MuteButton from "../components/Shared/MuteButton";
-import WGScoreboard from "../components/WordGame/WGScoreboard";
-import WGPolaroid from "../components/WordGame/WGPolaroid";
+
+import SSNav from "../components/SimonSays/SSNav";
+import WGPlayArea from "../components/WordGame/WGPlayArea";
+import WGHeadings from "../components/WordGame/WGHeadings";
+import WGScoreboards from "../components/WordGame/WGScoreboards";
 
 const LOCALSTORAGE_KEY_HISCORE = "hiScores";
 
@@ -33,7 +31,7 @@ const theme = createTheme({
     },
 });
 
-const StyledButton = styled(Button)({
+const StartButton = styled(Button)({
     fontWeight: "700",
     fontSize: "1.5rem",
     padding: "1rem 2rem",
@@ -42,6 +40,18 @@ const StyledButton = styled(Button)({
     width: "fit-content",
     "&:hover": {
         backgroundColor: "#940050",
+    },
+});
+
+const RestartButton = styled(Button)({
+    fontWeight: "700",
+    fontSize: "1.5rem",
+    padding: "1rem 2rem",
+    width: "fit-content",
+    backgroundColor: "white",
+    color: "#BC0066",
+    "&:hover": {
+        backgroundColor: "#F2F2F2",
     },
 });
 
@@ -56,6 +66,7 @@ class WordGame extends Component {
             hiScore: 0,
             gameOver: false,
             atGameStart: true,
+            previousWord: "",
 
             muted: false,
         };
@@ -115,9 +126,14 @@ class WordGame extends Component {
         this.setState({ atGameStart: false });
         let outcome = getRandomIntInclusive(1, 2);
 
-        // 1/2 chance to get a new word
+        // 2/3 chance to get a new word
         if (this.state.score < 5 || outcome !== 1) {
             let newWord = getRandomWord();
+            if (newWord === this.state.previousWord) {
+                console.log("Same as prev word, getting new one...");
+                this.selectWord();
+                return;
+            }
             this.setState((prevState) => {
                 return {
                     displayWord: newWord,
@@ -125,14 +141,18 @@ class WordGame extends Component {
             });
         } else {
             let newWord = shuffle([...this.state.words])[0];
+            if (newWord === this.state.previousWord) {
+                console.log("Same as prev word, getting new one...");
+                this.selectWord();
+                return;
+            }
+
             this.setState((prevState) => {
                 return {
                     displayWord: newWord,
                 };
             });
         }
-
-        // (1/3 chance to get show a duplicate)
     };
 
     checkUserInput = async (e) => {
@@ -142,14 +162,23 @@ class WordGame extends Component {
             (e.target.name === "not-seen" && !result)
         ) {
             this.successSound.play();
-            await this.setState((prevState) => {
-                return {
-                    score: prevState.score + 1,
-                    words: new Set([...prevState.words, prevState.displayWord]),
-                    hiScore: Math.max(prevState.score + 1, prevState.hiScore),
-                };
-            });
-            await this.selectWord();
+            this.setState(
+                (prevState) => {
+                    return {
+                        score: prevState.score + 1,
+                        words: new Set([
+                            ...prevState.words,
+                            prevState.displayWord,
+                        ]),
+                        hiScore: Math.max(
+                            prevState.score + 1,
+                            prevState.hiScore
+                        ),
+                        previousWord: prevState.displayWord,
+                    };
+                },
+                () => this.selectWord()
+            );
         } else {
             this.setState((prevState) => {
                 if (prevState.livesLeft - 1 === 0) {
@@ -195,126 +224,43 @@ class WordGame extends Component {
                 <Box className="WORD-GAME">
                     <Container>
                         <Stack justifyContent={"center"} alignItems={"center"}>
-                            <Stack
-                                direction={"row"}
-                                justifyContent={"space-between"}
-                                width={"100%"}
-                                mt={3}
-                            >
-                                <Link to={"/"}>
-                                    <BackButton />
-                                </Link>
-                                <Stack direction={"row"} spacing={2}>
-                                    <InfoButton />
-                                    <MuteButton
-                                        onClick={this.muteSound}
-                                        muted={this.state.muted}
-                                    />
-                                </Stack>
-                            </Stack>
-
-                            <Typography variant="h3" fontWeight={"700"}>
-                                Have you seen this word?
-                            </Typography>
-                            <Typography variant="h5" fontWeight={"400"}>
-                                If you have, click "Seen".
-                            </Typography>
-                            <Typography variant="h5">
-                                If you have not, click "New".
-                            </Typography>
-
-                            <Stack
-                                direction={"row"}
-                                justifyContent={"space-evenly"}
-                                alignItems={"center"}
-                                width={"100%"}
-                                padding={2}
-                            >
-                                <WGScoreboard
-                                    firstPart="Score:"
-                                    color="#BC0066"
-                                >
-                                    {this.state.score}
-                                </WGScoreboard>
-                                <WGScoreboard
-                                    firstPart="Lives left:"
-                                    color="#BC0066"
-                                >
-                                    {this.state.gameOver
-                                        ? "💀"
-                                        : Array(this.state.livesLeft).fill("❤")}
-                                </WGScoreboard>
-                                <WGScoreboard
-                                    firstPart="HiScore:"
-                                    color="#BC0066"
-                                >
-                                    {this.state.hiScore}
-                                </WGScoreboard>
-                            </Stack>
+                            <SSNav
+                                muted={this.state.muted}
+                                muteSound={this.muteSound}
+                            />
+                            <WGHeadings />
+                            <WGScoreboards
+                                score={this.state.score}
+                                hiScore={this.state.hiScore}
+                                gameOver={this.state.gameOver}
+                                livesLeft={this.state.livesLeft}
+                            />
 
                             {this.state.atGameStart && (
-                                <StyledButton
+                                <StartButton
                                     disableRipple
                                     onClick={this.selectWord}
                                     sx={{ mt: 3 }}
                                 >
                                     Start Game
-                                </StyledButton>
+                                </StartButton>
                             )}
 
                             {!this.state.gameOver &&
                                 !this.state.atGameStart && (
-                                    <>
-                                        <WGPolaroid>
-                                            <Typography
-                                                variant="h2"
-                                                fontWeight={"700"}
-                                                fontFamily={
-                                                    "'Merriweather', serif"
-                                                }
-                                            >
-                                                {this.state.displayWord}
-                                            </Typography>
-
-                                            {/* <h1>{this.state.words}</h1> */}
-                                        </WGPolaroid>
-                                        <Stack
-                                            direction={"row"}
-                                            spacing={5}
-                                            mt={3}
-                                        >
-                                            <StyledButton
-                                                disableRipple
-                                                name="seen"
-                                                onClick={this.checkUserInput}
-                                            >
-                                                SEEN
-                                            </StyledButton>
-                                            <StyledButton
-                                                disableRipple
-                                                name="not-seen"
-                                                onClick={this.checkUserInput}
-                                            >
-                                                NEW
-                                            </StyledButton>
-                                        </Stack>
-                                    </>
+                                    <WGPlayArea
+                                        checkUserInput={this.checkUserInput}
+                                        displayWord={this.state.displayWord}
+                                    />
                                 )}
                             {this.state.gameOver && (
-                                <StyledButton
+                                <RestartButton
                                     disableRipple
                                     onClick={this.restartGame}
-                                    sx={{
-                                        mt: 3,
-                                        backgroundColor: "white",
-                                        color: "#BC0066",
-                                        "&:hover": {
-                                            backgroundColor: "#F2F2F2",
-                                        },
-                                    }}
+                                    sx={{ mt: 3 }}
                                 >
                                     Play Again?
-                                </StyledButton>
+                                </RestartButton>
                             )}
                         </Stack>
                     </Container>
