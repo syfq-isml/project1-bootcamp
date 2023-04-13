@@ -14,11 +14,12 @@ import {
     Container,
     Stack,
     ThemeProvider,
-    Typography,
     createTheme,
 } from "@mui/material";
 import SSScoreboard from "../components/SimonSays/SSScoreboard";
 import styled from "@emotion/styled";
+import SSHeadings from "../components/SimonSays/SSHeadings";
+import SSButtonsWrapper from "../components/SimonSays/SSButtonsWrapper";
 
 let emptyArray = new Array(9).fill("");
 
@@ -33,7 +34,7 @@ const theme = createTheme({
     },
 });
 
-const StyledButton = styled(Button)({
+const StartButton = styled(Button)({
     fontWeight: "700",
     fontSize: "1.5rem",
     padding: "1rem 2rem",
@@ -42,6 +43,18 @@ const StyledButton = styled(Button)({
     width: "fit-content",
     "&:hover": {
         backgroundColor: "#0B3B66",
+    },
+});
+
+const RestartButton = styled(Button)({
+    fontWeight: "700",
+    fontSize: "1.5rem",
+    padding: "1rem 2rem",
+    width: "fit-content",
+    backgroundColor: "white",
+    color: "#1164AF",
+    "&:hover": {
+        backgroundColor: "#F2F2F2",
     },
 });
 
@@ -243,52 +256,14 @@ class SimonSaysGame extends Component {
                                 muted={this.state.muted}
                                 muteSound={this.muteSound}
                             />
-                            <Typography
-                                variant="h3"
-                                fontWeight={"700"}
-                                textAlign={"center"}
-                            >
-                                How long can you go?
-                            </Typography>
-                            <Typography
-                                variant="h5"
-                                fontWeight={"400"}
-                                textAlign={"center"}
-                            >
-                                Memorize the pattern and click them in sequence.
-                            </Typography>
-                            <Typography
-                                variant="h5"
-                                fontWeight={"400"}
-                                textAlign={"center"}
-                            >
-                                The pattern gets longer every time you get it
-                                right.
-                            </Typography>
-                            <Typography
-                                variant="h5"
-                                fontWeight={"400"}
-                                textAlign={"center"}
-                            >
-                                1 mistake and you're out!
-                            </Typography>
-
+                            <SSHeadings />
                             <SSScoreboard
                                 level={this.state.currentSequence.length}
                                 hiScore={this.state.hiScore}
                                 color="blue"
                             />
 
-                            <Box
-                                sx={{
-                                    display: "flex",
-                                    width: "600px",
-                                    flexWrap: "wrap",
-                                    gap: "1rem",
-                                    justifyContent: "center",
-                                    alignItems: "center",
-                                }}
-                            >
+                            <SSButtonsWrapper>
                                 {emptyArray.map((elem, index) => {
                                     return (
                                         <SSButton
@@ -309,33 +284,26 @@ class SimonSaysGame extends Component {
                                         />
                                     );
                                 })}
-                            </Box>
+                            </SSButtonsWrapper>
+
                             {this.state.showNextButton && (
-                                <StyledButton
+                                <StartButton
                                     disableRipple
                                     onClick={this.handleGameStart}
-                                    sx={{
-                                        mt: 3,
-                                    }}
+                                    sx={{ mt: 3 }}
                                 >
                                     Start Game
-                                </StyledButton>
+                                </StartButton>
                             )}
+
                             {this.state.isGameOver && (
-                                <StyledButton
+                                <RestartButton
                                     disableRipple
                                     onClick={this.handleGameStart}
-                                    sx={{
-                                        mt: 3,
-                                        backgroundColor: "white",
-                                        color: "#1164AF",
-                                        "&:hover": {
-                                            backgroundColor: "#F2F2F2",
-                                        },
-                                    }}
+                                    sx={{ mt: 3 }}
                                 >
                                     Play Again
-                                </StyledButton>
+                                </RestartButton>
                             )}
                         </Stack>
                     </Container>
