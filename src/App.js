@@ -7,13 +7,14 @@ import WordGame from "./pages/WordGame";
 import NoRepeatGame from "./pages/NoRepeatGame";
 import Home from "./pages/Home";
 
-import { HashRouter, Route, Routes } from "react-router-dom";
+import { HashRouter, Navigate, Route, Routes } from "react-router-dom";
 
 import {
     ThemeProvider,
     createTheme,
     responsiveFontSizes,
 } from "@mui/material/styles";
+import ErrorPage from "./pages/ErrorPage";
 
 let theme = createTheme({
     typography: {
@@ -46,6 +47,13 @@ class App extends React.Component {
                             <Route
                                 path="no-repeat-game"
                                 element={<NoRepeatGame />}
+                            />
+
+                            <Route path="error404" element={<ErrorPage />} />
+
+                            <Route
+                                path="*"
+                                element={<Navigate to="/error404" replace />}
                             />
                         </Routes>
                     </HashRouter>
