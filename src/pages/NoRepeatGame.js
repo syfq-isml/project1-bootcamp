@@ -21,7 +21,12 @@ import {
     styled,
 } from "@mui/material";
 
-import doggo from "../assets/images/dog.png";
+import SSNav from "../components/SimonSays/SSNav";
+import NRHeadings from "../components/NoRepeatGame/NRHeadings";
+import NRScoreboard from "../components/NoRepeatGame/NRScoreboard";
+import NRGameOverElements from "../components/NoRepeatGame/NRGameOverElements";
+import NRGameWonElements from "../components/NoRepeatGame/NRGameWonElements";
+import NRCardsWrapper from "../components/NoRepeatGame/NRCardsWrapper";
 
 const LOCALSTORAGE_KEY_HISCORE = "hiScores";
 
@@ -173,95 +178,17 @@ class NoRepeatGame extends Component {
                                 justifyContent={"center"}
                                 alignItems={"center"}
                             >
-                                <Stack
-                                    direction={"row"}
-                                    justifyContent={"space-between"}
-                                    width={"100%"}
-                                    mt={3}
-                                >
-                                    <Link to={"/"}>
-                                        <BackButton />
-                                    </Link>
-                                    <Stack direction={"row"} spacing={2}>
-                                        <InfoButton />
-                                        <MuteButton
-                                            onClick={this.muteSound}
-                                            muted={this.state.muted}
-                                        />
-                                    </Stack>
-                                </Stack>
+                                <SSNav
+                                    muted={this.state.muted}
+                                    muteSound={this.muteSound}
+                                />
+                                <NRHeadings />
+                                <NRScoreboard
+                                    score={this.state.score}
+                                    hiScore={this.state.hiScore}
+                                />
 
-                                <Typography
-                                    variant="h4"
-                                    fontWeight={"700"}
-                                    textAlign={"center"}
-                                >
-                                    Click on each card exactly once!
-                                </Typography>
-                                <Stack
-                                    direction={"row"}
-                                    justifyContent={"space-evenly"}
-                                    width={"100%"}
-                                    padding={2}
-                                >
-                                    <Paper
-                                        elevation={0}
-                                        sx={{
-                                            backgroundColor:
-                                                "rgb(255, 255, 255, 0.2)",
-                                            px: 2,
-                                            py: 1,
-                                        }}
-                                    >
-                                        <Typography variant="h5">
-                                            Score:{" "}
-                                            <Typography
-                                                variant="h5"
-                                                sx={{
-                                                    display: "inline-flex",
-                                                    fontWeight: "700",
-                                                    color: "#F56100",
-                                                }}
-                                            >
-                                                {this.state.score}
-                                            </Typography>
-                                        </Typography>
-                                    </Paper>
-                                    <Paper
-                                        elevation={0}
-                                        sx={{
-                                            backgroundColor:
-                                                "rgb(255, 255, 255, 0.2)",
-                                            px: 2,
-                                            py: 1,
-                                        }}
-                                    >
-                                        <Typography variant="h5">
-                                            HiScore:{" "}
-                                            <Typography
-                                                variant="h5"
-                                                sx={{
-                                                    display: "inline-flex",
-                                                    fontWeight: "700",
-                                                    color: "#F56100",
-                                                }}
-                                            >
-                                                {this.state.hiScore}
-                                            </Typography>
-                                        </Typography>
-                                    </Paper>
-                                </Stack>
-
-                                <Box
-                                    justifyContent={"center"}
-                                    alignItems={"center"}
-                                    sx={{
-                                        display: "flex",
-                                        gap: "1rem",
-                                        width: { sm: "700px", xs: "300px" },
-                                        flexWrap: "wrap",
-                                    }}
-                                >
+                                <NRCardsWrapper>
                                     {!this.state.isGameWon &&
                                         this.state.wordsArray.map((word) => {
                                             let bool =
@@ -281,61 +208,21 @@ class NoRepeatGame extends Component {
                                                 />
                                             );
                                         })}
-                                </Box>
+                                </NRCardsWrapper>
+
                                 {this.state.isGameOver && (
-                                    <Stack
-                                        spacing={2}
-                                        alignItems={"center"}
-                                        mt={2}
-                                    >
-                                        <Typography
-                                            variant="h4"
-                                            fontWeight={700}
-                                            mt={2}
-                                            mb={2}
-                                        >
-                                            ❌ Oops, you've clicked on{" "}
-                                            <span
-                                                style={{
-                                                    color: "white",
-                                                    backgroundColor: "#F56100",
-                                                    fontWeight: "700",
-                                                    fontSize: "1.5rem",
-                                                    padding: "1rem",
-                                                    borderRadius: "4px",
-                                                    textTransform: "uppercase",
-                                                }}
-                                            >
-                                                {this.state.lastClickedWord}
-                                            </span>{" "}
-                                            twice. ❌
-                                        </Typography>
-                                        <StyledButton
-                                            onClick={this.restartGame}
-                                        >
-                                            Play again
-                                        </StyledButton>
-                                    </Stack>
+                                    <NRGameOverElements
+                                        lastClickedWord={
+                                            this.state.lastClickedWord
+                                        }
+                                        restartGame={this.restartGame}
+                                    />
                                 )}
+
                                 {this.state.isGameWon && (
-                                    <>
-                                        <Typography
-                                            variant="h2"
-                                            fontWeight={700}
-                                        >
-                                            Hey, wow, you actually did it!
-                                        </Typography>
-                                        <Typography variant="h4">
-                                            For your hard work, enjoy this happy
-                                            little doggo.
-                                        </Typography>
-                                        <img src={doggo} alt="lil dog" />
-                                        <StyledButton
-                                            onClick={this.restartGame}
-                                        >
-                                            Play again
-                                        </StyledButton>
-                                    </>
+                                    <NRGameWonElements
+                                        restartGame={this.restartGame}
+                                    />
                                 )}
                             </Stack>
                         </Box>
