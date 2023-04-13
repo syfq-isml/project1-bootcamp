@@ -20,9 +20,12 @@ import succ808 from "../assets/sounds/succ808.wav";
 
 import { isAllNumbers } from "../utils";
 
-import BackButton from "../components/Shared/BackButton";
-import MuteButton from "../components/Shared/MuteButton";
-import InfoButton from "../components/Shared/InfoButton";
+import SSNav from "../components/SimonSays/SSNav";
+import NGHeadings from "../components/NumberGame/NGHeadings";
+import NGScoreboard from "../components/NumberGame/NGScoreboard";
+import NGTV from "../components/NumberGame/NGTV";
+import NGPlayArea from "../components/NumberGame/NGPlayArea";
+import NGGameOverElements from "../components/NumberGame/NGGameOverElements";
 
 const LOCALSTORAGE_KEY_HISCORE = "hiScores";
 
@@ -31,15 +34,6 @@ const theme = createTheme({
         fontFamily: ["Inter", "sans-serif"].join(","),
         allVariants: {
             color: "white",
-        },
-    },
-});
-
-const fontChange = createTheme({
-    typography: {
-        fontFamily: ["Space Mono", "monospace"].join(","),
-        allVariants: {
-            color: "#74D144",
         },
     },
 });
@@ -203,236 +197,56 @@ class NumberGame extends Component {
                 <Box className="NUMBER-GAME">
                     <Container>
                         <Stack alignItems={"center"} justifyContent={"center"}>
-                            <Stack
-                                direction={"row"}
-                                justifyContent={"space-between"}
-                                width={"100%"}
-                                mt={3}
-                            >
-                                <Link to={"/"}>
-                                    <BackButton />
-                                </Link>
-                                <Stack direction={"row"} spacing={2}>
-                                    <InfoButton />
-                                    <MuteButton
-                                        onClick={this.muteSound}
-                                        muted={this.state.muted}
-                                    />
-                                </Stack>
-                            </Stack>
-                            <Typography
-                                variant="h3"
-                                fontWeight={"700"}
-                                mt={3}
-                                textAlign={"center"}
-                            >
-                                Try to remember the longest number you can.
-                            </Typography>
-                            <Typography
-                                variant="h5"
-                                fontWeight={"400"}
-                                textAlign={"center"}
-                            >
-                                The average person can remember 7 numbers at
-                                once.
-                            </Typography>
-                            <Typography variant="h5" fontWeight={"400"}>
-                                Can{" "}
-                                <strong>
-                                    <em>you</em>
-                                </strong>{" "}
-                                do more?
-                            </Typography>
-                            <Stack
-                                direction={"row"}
-                                justifyContent={"space-evenly"}
-                                width={"100%"}
-                                padding={2}
-                            >
-                                <Paper
-                                    elevation={0}
-                                    sx={{
-                                        backgroundColor:
-                                            "rgb(255, 255, 255, 0.2)",
-                                        px: 2,
-                                        py: 1,
-                                    }}
-                                >
-                                    <Typography variant="h5" color={"white"}>
-                                        Level:{" "}
-                                        <Typography
-                                            variant="h5"
-                                            sx={{
-                                                display: "inline-flex",
-                                                fontWeight: "700",
-                                                color: "#3CA60F",
-                                            }}
-                                        >
-                                            {this.state.currentSequence
-                                                .length || 1}
-                                        </Typography>
-                                    </Typography>
-                                </Paper>
-                                <Paper
-                                    elevation={0}
-                                    sx={{
-                                        backgroundColor:
-                                            "rgb(255, 255, 255, 0.2)",
-                                        px: 2,
-                                        py: 1,
-                                    }}
-                                >
-                                    <Typography variant="h5">
-                                        HiScore:{" "}
-                                        <Typography
-                                            variant="h5"
-                                            sx={{
-                                                display: "inline-flex",
-                                                fontWeight: "700",
-                                                color: "#3CA60F",
-                                            }}
-                                        >
-                                            {this.state.hiScore}
-                                        </Typography>
-                                    </Typography>
-                                </Paper>
-                            </Stack>
+                            <SSNav
+                                muted={this.state.muted}
+                                muteSound={this.muteSound}
+                            />
+                            <NGHeadings />
+                            <NGScoreboard
+                                currentSequence={this.state.currentSequence}
+                                hiScore={this.state.hiScore}
+                            />
 
-                            <Paper
-                                sx={{
-                                    backgroundColor: "#BAB6AE",
-                                    padding: "1.5rem",
-                                    height: "300px",
-                                    width: "80%",
-                                }}
-                            >
-                                <Paper
-                                    elevation={0}
+                            <NGTV>
+                                <Typography
+                                    variant="h1"
+                                    component="h3"
+                                    fontFamily={"'Space Mono', monospace"}
+                                    color={"#74D144"}
+                                    // fontSize={
+                                    //     this.state.currentSequence
+                                    //         .length > 10
+                                    //         ? "4rem"
+                                    //         : "5rem"
+                                    // }
+
+                                    fontWeight={"700"}
                                     sx={{
-                                        backgroundColor: "#2E2B26",
-                                        color: "#74D144",
-                                        height: "100%",
-                                        display: "flex",
-                                        alignItems: "center",
-                                        justifyContent: "center",
-                                        fontFamily: "'Inconsolata', monospace",
+                                        fontSize: {
+                                            xs: "30px",
+                                            sm: "4rem",
+                                        },
                                     }}
                                 >
-                                    <ThemeProvider theme={fontChange}>
-                                        <Typography
-                                            variant="h1"
-                                            component="h3"
-                                            fontFamily={
-                                                "'Space Mono', monospace"
-                                            }
-                                            color={"#74D144"}
-                                            // fontSize={
-                                            //     this.state.currentSequence
-                                            //         .length > 10
-                                            //         ? "4rem"
-                                            //         : "5rem"
-                                            // }
+                                    {this.state.display}
+                                </Typography>
+                                {this.state.userIsGuessing && (
+                                    <NGPlayArea
+                                        handleChange={this.handleChange}
+                                        handleSubmit={this.handleSubmit}
+                                        userInput={this.state.userInput}
+                                    />
+                                )}
+                                {this.state.showLossScreen && (
+                                    <NGGameOverElements
+                                        currentSequence={
+                                            this.state.currentSequence
+                                        }
+                                        userInput={this.state.userInput}
+                                    />
+                                )}
+                            </NGTV>
 
-                                            fontWeight={"700"}
-                                            sx={{
-                                                fontSize: {
-                                                    xs: "30px",
-                                                    sm: "4rem",
-                                                },
-                                            }}
-                                        >
-                                            {this.state.display}
-                                        </Typography>
-                                        {this.state.userIsGuessing && (
-                                            <Stack
-                                                justifyContent={"center"}
-                                                alignItems={"center"}
-                                            >
-                                                <Typography
-                                                    variant="h4"
-                                                    component={"h3"}
-                                                    color={"inherit"}
-                                                    fontFamily={"inherit"}
-                                                >
-                                                    What was the number?
-                                                </Typography>
-                                                <form
-                                                    onSubmit={this.handleSubmit}
-                                                    className="fl-col fl-centered"
-                                                >
-                                                    <input
-                                                        autoFocus
-                                                        type="text"
-                                                        onChange={
-                                                            this.handleChange
-                                                        }
-                                                        value={
-                                                            this.state.userInput
-                                                        }
-                                                    ></input>
-                                                </form>
-                                            </Stack>
-                                        )}
-                                        {this.state.showLossScreen && (
-                                            <Stack
-                                                alignItems={"center"}
-                                                justifyContent={"center"}
-                                            >
-                                                <Typography variant="h4">
-                                                    Oops, your number was
-                                                </Typography>
-                                                <Typography
-                                                    variant="h3"
-                                                    fontWeight={"700"}
-                                                >
-                                                    {this.state.currentSequence}
-                                                </Typography>
-                                                <Typography variant="h4">
-                                                    You've entered
-                                                </Typography>
-                                                <Typography
-                                                    variant="h3"
-                                                    fontWeight={"700"}
-                                                >
-                                                    {this.state.userInput}
-                                                </Typography>
-                                            </Stack>
-                                        )}
-                                    </ThemeProvider>
-                                </Paper>
-                                <Stack
-                                    direction="row"
-                                    justifyContent="flex-end"
-                                    alignItems="center"
-                                    spacing={1}
-                                    mt={0.75}
-                                >
-                                    <Paper
-                                        sx={{
-                                            borderRadius: "50%",
-                                            backgroundColor: "red",
-                                            width: "10px",
-                                            height: "10px",
-                                        }}
-                                    />
-                                    <Paper
-                                        sx={{
-                                            borderRadius: "50%",
-                                            backgroundColor: "green",
-                                            width: "10px",
-                                            height: "10px",
-                                        }}
-                                    />
-                                    <Paper
-                                        sx={{
-                                            borderRadius: "50%",
-                                            backgroundColor: "orange",
-                                            width: "10px",
-                                            height: "10px",
-                                        }}
-                                    />
-                                </Stack>
-                            </Paper>
                             {this.state.error !== "" && (
                                 <Alert
                                     variant="filled"
@@ -445,20 +259,6 @@ class NumberGame extends Component {
                                 </Alert>
                             )}
                             {this.state.showLossScreen && (
-                                // <Stack
-                                //     alignItems={"center"}
-                                //     justifyContent={"center"}
-                                // >
-                                //     <Typography variant="h4">
-                                //         You memorized a total of{" "}
-                                //         {this.state.currentSequence.length - 1}{" "}
-                                //         numbers this round.
-                                //     </Typography>
-                                //     <h1>
-                                //         Your best was {this.state.hiScore}{" "}
-                                //         numbers!
-                                //     </h1>
-                                //     </Stack>
                                 <StyledButton
                                     sx={{
                                         mt: 3,
@@ -474,14 +274,12 @@ class NumberGame extends Component {
                                 </StyledButton>
                             )}
                             {this.state.level === 1 && (
-                                <>
-                                    <StyledButton
-                                        sx={{ mt: 3 }}
-                                        onClick={this.startGame}
-                                    >
-                                        Start
-                                    </StyledButton>
-                                </>
+                                <StyledButton
+                                    sx={{ mt: 3 }}
+                                    onClick={this.startGame}
+                                >
+                                    Start
+                                </StyledButton>
                             )}
                         </Stack>
                     </Container>

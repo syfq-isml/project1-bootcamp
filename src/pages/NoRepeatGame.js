@@ -1,26 +1,19 @@
 import React, { Component } from "react";
 import { getArrayOfWords, shuffle } from "../utils";
-import NRCards from "../components/NoRepeatGame/NRCards";
-import { Link } from "react-router-dom";
 import { Howl, Howler } from "howler";
 
 import fail808 from "../assets/sounds/fail808.wav";
 import succ808 from "../assets/sounds/succ808.wav";
-import BackButton from "../components/Shared/BackButton";
-import InfoButton from "../components/Shared/InfoButton";
-import MuteButton from "../components/Shared/MuteButton";
+
 import {
     Box,
-    Button,
     Container,
-    Paper,
     Stack,
     ThemeProvider,
-    Typography,
     createTheme,
-    styled,
 } from "@mui/material";
 
+import NRCards from "../components/NoRepeatGame/NRCards";
 import SSNav from "../components/SimonSays/SSNav";
 import NRHeadings from "../components/NoRepeatGame/NRHeadings";
 import NRScoreboard from "../components/NoRepeatGame/NRScoreboard";
@@ -36,18 +29,6 @@ const theme = createTheme({
         allVariants: {
             color: "white",
         },
-    },
-});
-
-const StyledButton = styled(Button)({
-    fontWeight: "700",
-    fontSize: "1.5rem",
-    padding: "1rem 2rem",
-    backgroundColor: "white",
-    color: "#F07C31",
-    width: "fit-content",
-    "&:hover": {
-        backgroundColor: "#F3F2F2",
     },
 });
 
