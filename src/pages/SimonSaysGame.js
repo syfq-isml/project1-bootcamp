@@ -15,6 +15,7 @@ import {
     Stack,
     ThemeProvider,
     createTheme,
+    responsiveFontSizes,
 } from "@mui/material";
 import SSScoreboard from "../components/SimonSays/SSScoreboard";
 import styled from "@emotion/styled";
@@ -25,7 +26,7 @@ let emptyArray = new Array(9).fill("");
 
 const LOCALSTORAGE_KEY_HISCORE = "hiScores";
 
-const theme = createTheme({
+let theme = createTheme({
     typography: {
         fontFamily: ["Inter", "sans-serif"].join(","),
         allVariants: {
@@ -33,6 +34,8 @@ const theme = createTheme({
         },
     },
 });
+
+theme = responsiveFontSizes(theme);
 
 const StartButton = styled(Button)({
     fontWeight: "700",

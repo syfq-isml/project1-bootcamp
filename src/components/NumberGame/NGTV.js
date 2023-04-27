@@ -1,7 +1,13 @@
-import { Paper, Stack, ThemeProvider, createTheme } from "@mui/material";
+import {
+    Paper,
+    Stack,
+    ThemeProvider,
+    createTheme,
+    responsiveFontSizes,
+} from "@mui/material";
 import React, { Component } from "react";
 
-const fontChange = createTheme({
+let fontChange = createTheme({
     typography: {
         fontFamily: ["Space Mono", "monospace"].join(","),
         allVariants: {
@@ -9,6 +15,8 @@ const fontChange = createTheme({
         },
     },
 });
+
+fontChange = responsiveFontSizes(fontChange);
 
 class NGTV extends Component {
     render() {

@@ -25,17 +25,31 @@ class Home extends Component {
         const storedHiScores = JSON.parse(
             localStorage.getItem(LOCALSTORAGE_KEY_HISCORE)
         );
-        if (storedHiScores) this.setState({ hiScores: { ...storedHiScores } });
-        else
-            localStorage.setItem(
-                LOCALSTORAGE_KEY_HISCORE,
-                JSON.stringify({
-                    NR: 0,
-                    NG: 0,
-                    WG: 0,
-                    SS: 0,
-                })
-            );
+        if (storedHiScores) {
+            const newObj = {
+                NR: 0,
+                NG: 0,
+                WG: 0,
+                SS: 0,
+            };
+
+            for (let key in storedHiScores) {
+                newObj[key] = storedHiScores[key];
+            }
+            this.setState({
+                hiScores: newObj,
+            });
+        }
+        // } else
+        //     localStorage.setItem(
+        //         LOCALSTORAGE_KEY_HISCORE,
+        //         JSON.stringify({
+        //             NR: 0,
+        //             NG: 0,
+        //             WG: 0,
+        //             SS: 0,
+        //         })
+        //     );
     }
 
     render() {

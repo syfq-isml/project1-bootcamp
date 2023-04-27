@@ -12,6 +12,7 @@ import {
     ThemeProvider,
     Typography,
     createTheme,
+    responsiveFontSizes,
     styled,
 } from "@mui/material";
 
@@ -29,7 +30,7 @@ import NGGameOverElements from "../components/NumberGame/NGGameOverElements";
 
 const LOCALSTORAGE_KEY_HISCORE = "hiScores";
 
-const theme = createTheme({
+let theme = createTheme({
     typography: {
         fontFamily: ["Inter", "sans-serif"].join(","),
         allVariants: {
@@ -37,6 +38,8 @@ const theme = createTheme({
         },
     },
 });
+
+theme = responsiveFontSizes(theme);
 
 const StyledButton = styled(Button)({
     fontWeight: "700",
